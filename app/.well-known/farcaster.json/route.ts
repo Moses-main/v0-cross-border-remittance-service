@@ -36,13 +36,13 @@ export async function GET() {
         `${ROOT_URL}/s2.png`,
         `${ROOT_URL}/s3.png`,
       ],
-      primaryCategory: "payment",
+      primaryCategory: "finance",
       tags: ["payment", "remittance", "baseapp", "base", "multi-lingual"],
       heroImageUrl: `${ROOT_URL}/og.png`,
       tagline: "Pay instantly",
       ogTitle: "BetaRemit Mini App",
       ogDescription:
-        "BetaRemit is a blockchain-powered cross-border remittance platform offering fast, low-cost money transfers with cashback rewards and a seamless user experience.",
+        "BetaRemit is a blockchain-powered cross-border remittance platform.",
       ogImageUrl:
         "https://v0-cross-border-remittance-service.vercel.app/og.png",
       noindex: true,
