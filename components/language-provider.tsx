@@ -148,6 +148,7 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     about: "About",
     blog: "Blog",
     contact: "Contact",
+    more: "More",
   },
   fr: {
     home: "Accueil",
@@ -278,6 +279,7 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     about: "À propos",
     blog: "Blog",
     contact: "Contact",
+    more: "Plus",
   },
   es: {
     home: "Inicio",
@@ -408,6 +410,7 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     about: "Acerca de",
     blog: "Blog",
     contact: "Contacto",
+    more: "Más",
   },
   de: {
     home: "Startseite",
@@ -538,6 +541,7 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     about: "Über uns",
     blog: "Blog",
     contact: "Kontakt",
+    more: "Mehr",
   },
 }
 
