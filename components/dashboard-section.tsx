@@ -12,7 +12,7 @@ export function DashboardSection() {
 
   return (
     <section id="dashboard" className="py-20 md:py-32">
-      <div className="container max-w-7xl px-4 md:px-6">
+      <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Stats Cards */}
           <div className="lg:col-span-1 space-y-4">

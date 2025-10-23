@@ -2,9 +2,11 @@
 
 import { ThemeToggle } from "./theme-toggle"
 import { Button } from "@/components/ui/button"
-import { Send, Menu, LogOut } from "lucide-react"
+import { Send, Wallet as WalletIcon, LogOut } from "lucide-react"
 import { useWeb3 } from "./web3-provider"
 import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,9 +15,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+const NAV_ITEMS = [
+  { href: "/", label: "Home" },
+  { href: "/dashboard", label: "Transfer" },
+  { href: "/dashboard/rewards", label: "Rewards" },
+  { href: "/profile", label: "Profile" },
+  { href: "/settings", label: "Settings" },
+]
+
 export function Header() {
   const { isConnected, address, connectWallet, disconnectWallet } = useWeb3()
   const [isConnecting, setIsConnecting] = useState(false)
+  const pathname = usePathname()
 
   const handleWalletClick = async () => {
     setIsConnecting(true)
@@ -34,7 +45,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 animate-slide-down">
-      <div className="container flex h-14 sm:h-16 max-w-7xl items-center justify-between px-4 md:px-6">
+      <div className="container mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-2">
           <div className="flex h-9 sm:h-10 w-9 sm:w-10 items-center justify-center rounded-lg bg-primary transition-all duration-300 hover:scale-110">
             <Send className="h-4 sm:h-5 w-4 sm:w-5 text-primary-foreground" />
@@ -42,16 +53,23 @@ export function Header() {
           <h1 className="text-lg sm:text-xl font-bold text-foreground">RemitFlow</h1>
         </div>
 
-        <nav className="hidden md:flex items-center gap-8">
-          <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            Features
-          </a>
-          <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            How It Works
-          </a>
-          <a href="#rewards" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            Rewards
-          </a>
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+          {NAV_ITEMS.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`text-sm transition-colors relative after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:rounded-full after:transition-all after:duration-300 ${
+                  isActive
+                    ? "text-foreground after:w-full after:bg-primary"
+                    : "text-muted-foreground hover:text-foreground after:w-0 hover:after:w-full hover:after:bg-muted-foreground/60"
+                }`}
+              >
+                {item.label}
+              </Link>
+            )
+          })}
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
@@ -92,7 +110,7 @@ export function Header() {
             </Button>
           )}
 
-          {/* Mobile menu button */}
+          {/* Mobile wallet button */}
           <Button
             onClick={handleWalletClick}
             disabled={isConnecting}
@@ -100,7 +118,7 @@ export function Header() {
             variant={isConnected ? "outline" : "default"}
             size="sm"
           >
-            <Menu className="h-4 w-4" />
+            <WalletIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>

@@ -39,7 +39,7 @@ const features = [
 export function FeaturesSection() {
   return (
     <section id="features" className="py-16 md:py-32 bg-secondary/30">
-      <div className="container max-w-7xl px-4 md:px-6">
+      <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <div className="text-center space-y-4 mb-12 md:mb-16 animate-fade-in">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground text-balance">Powerful Features</h2>
           <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
