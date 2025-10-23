@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Globe } from "lucide-react"
-import { useI18n } from "./language-provider"
-
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Globe } from "lucide-react";
+import { useI18n } from "./language-provider";
+import Image from "next/image";
 export function HeroSection() {
-  const { t } = useI18n()
+  const { t } = useI18n();
   return (
     <section className="relative overflow-hidden py-16 md:py-32">
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
@@ -37,17 +37,36 @@ export function HeroSection() {
             </div>
 
             <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-4">
-              <div className="space-y-1 animate-slide-up" style={{ animationDelay: "100ms" }}>
-                <p className="text-xl sm:text-2xl font-bold text-primary">0.5%</p>
-                <p className="text-xs sm:text-sm text-muted-foreground">{t("stat_fee_label")}</p>
+              <div
+                className="space-y-1 animate-slide-up"
+                style={{ animationDelay: "100ms" }}
+              >
+                <p className="text-xl sm:text-2xl font-bold text-primary">
+                  0.5%
+                </p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {t("stat_fee_label")}
+                </p>
               </div>
-              <div className="space-y-1 animate-slide-up" style={{ animationDelay: "150ms" }}>
+              <div
+                className="space-y-1 animate-slide-up"
+                style={{ animationDelay: "150ms" }}
+              >
                 <p className="text-xl sm:text-2xl font-bold text-accent">1%</p>
-                <p className="text-xs sm:text-sm text-muted-foreground">{t("stat_cashback_label")}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {t("stat_cashback_label")}
+                </p>
               </div>
-              <div className="space-y-1 animate-slide-up" style={{ animationDelay: "200ms" }}>
-                <p className="text-xl sm:text-2xl font-bold text-primary">24/7</p>
-                <p className="text-xs sm:text-sm text-muted-foreground">{t("stat_available_label")}</p>
+              <div
+                className="space-y-1 animate-slide-up"
+                style={{ animationDelay: "200ms" }}
+              >
+                <p className="text-xl sm:text-2xl font-bold text-primary">
+                  24/7
+                </p>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {t("stat_available_label")}
+                </p>
               </div>
             </div>
           </div>
@@ -58,12 +77,21 @@ export function HeroSection() {
               <div className="absolute bottom-10 left-10 h-28 sm:h-40 w-28 sm:w-40 rounded-full bg-accent/20 blur-3xl" />
             </div>
             <div className="relative z-10 text-center space-y-4 px-4">
-              <Globe className="h-12 sm:h-16 w-12 sm:w-16 text-primary mx-auto" />
-              <p className="text-sm sm:text-base text-muted-foreground">{t("hero_network_label")}</p>
+                <Image
+                  src="/betaRemit.png"
+                  alt="RemitFlow Beta Logo"
+                  width={200} // adjust as needed
+                  height={200} // adjust as needed
+                  priority
+                  className="mx-auto rounded-lg"
+                />
+              <p className="text-sm sm:text-base text-muted-foreground">
+                {t("hero_network_label")}
+              </p>
             </div>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

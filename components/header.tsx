@@ -1,47 +1,49 @@
-"use client"
+"use client";
 
-import { ThemeToggle } from "./theme-toggle"
-import { Button } from "@/components/ui/button"
-import { Send, Wallet as WalletIcon, LogOut } from "lucide-react"
-import { useWeb3 } from "./web3-provider"
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { LanguageSelector } from "./language-selector"
-import { useI18n } from "./language-provider"
+import { ThemeToggle } from "./theme-toggle";
+import { Button } from "@/components/ui/button";
+import { Send, Wallet as WalletIcon, LogOut } from "lucide-react";
+import { useWeb3 } from "./web3-provider";
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { LanguageSelector } from "./language-selector";
+import { useI18n } from "./language-provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 const DIRECT_LINKS = [
   { href: "/", key: "home" },
   { href: "/dashboard/rewards", key: "rewards" },
-]
+];
 
 export function Header() {
-  const { isConnected, address, connectWallet, disconnectWallet } = useWeb3()
-  const [isConnecting, setIsConnecting] = useState(false)
-  const pathname = usePathname()
-  const { t } = useI18n()
+  const { isConnected, address, connectWallet, disconnectWallet } = useWeb3();
+  const [isConnecting, setIsConnecting] = useState(false);
+  const pathname = usePathname();
+  const { t } = useI18n();
 
   const handleWalletClick = async () => {
-    setIsConnecting(true)
+    setIsConnecting(true);
     try {
       if (isConnected) {
-        disconnectWallet()
+        disconnectWallet();
       } else {
-        await connectWallet()
+        await connectWallet();
       }
     } finally {
-      setIsConnecting(false)
+      setIsConnecting(false);
     }
-  }
+  };
 
-  const displayAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Connect Wallet"
+  const displayAddress = address
+    ? `${address.slice(0, 6)}...${address.slice(-4)}`
+    : "Connect Wallet";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 animate-slide-down">
@@ -50,12 +52,15 @@ export function Header() {
           <div className="flex h-9 sm:h-10 w-9 sm:w-10 items-center justify-center rounded-lg bg-primary transition-all duration-300 hover:scale-110">
             <Send className="h-4 sm:h-5 w-4 sm:w-5 text-primary-foreground" />
           </div>
-          <h1 className="text-lg sm:text-xl font-bold text-foreground">RemitFlow</h1>
+          <h1 className="text-lg sm:text-xl font-bold text-foreground">
+            BetaRemit
+          </h1>
         </div>
 
         <nav className="hidden md:flex items-center gap-4 lg:gap-6">
           {DIRECT_LINKS.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+            const isActive =
+              pathname === item.href || pathname.startsWith(item.href + "/");
             return (
               <Link
                 key={item.href}
@@ -68,7 +73,7 @@ export function Header() {
               >
                 {t(item.key)}
               </Link>
-            )
+            );
           })}
 
           {/* Pay group */}
@@ -136,11 +141,16 @@ export function Header() {
                   {address}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigator.clipboard.writeText(address || "")}>
+                <DropdownMenuItem
+                  onClick={() => navigator.clipboard.writeText(address || "")}
+                >
                   Copy Address
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleWalletClick} className="text-destructive">
+                <DropdownMenuItem
+                  onClick={handleWalletClick}
+                  className="text-destructive"
+                >
                   <LogOut className="mr-2 h-4 w-4" />
                   Disconnect
                 </DropdownMenuItem>
@@ -169,5 +179,5 @@ export function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }

@@ -1,21 +1,27 @@
-"use client"
+"use client";
 
-import { useWeb3 } from "@/components/web3-provider"
-import { WalletConnectionGuard } from "@/components/wallet-connection-guard"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Copy, Download, QrCode } from "lucide-react"
-import { useState, useEffect } from "react"
-import QRCode from "qrcode"
-import { DashboardLayout } from "@/components/dashboard-layout"
-import { PaymentLinkBuilder } from "@/components/payment-link-builder"
-import { useI18n } from "@/components/language-provider"
+import { useWeb3 } from "@/components/web3-provider";
+import { WalletConnectionGuard } from "@/components/wallet-connection-guard";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Copy, Download, QrCode } from "lucide-react";
+import { useState, useEffect } from "react";
+import QRCode from "qrcode";
+import { DashboardLayout } from "@/components/dashboard-layout";
+import { PaymentLinkBuilder } from "@/components/payment-link-builder";
+import { useI18n } from "@/components/language-provider";
 
 export default function ProfilePage() {
-  const { isConnected, address } = useWeb3()
-  const { t } = useI18n()
-  const [qrCode, setQrCode] = useState<string>("")
-  const [copied, setCopied] = useState(false)
+  const { isConnected, address } = useWeb3();
+  const { t } = useI18n();
+  const [qrCode, setQrCode] = useState<string>("");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (address) {
@@ -30,26 +36,26 @@ export default function ProfilePage() {
           dark: "#000000",
           light: "#FFFFFF",
         },
-      }).then(setQrCode)
+      }).then(setQrCode);
     }
-  }, [address])
+  }, [address]);
 
   const handleCopyAddress = () => {
     if (address) {
-      navigator.clipboard.writeText(address)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      navigator.clipboard.writeText(address);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
-  }
+  };
 
   const handleDownloadQR = () => {
     if (qrCode) {
-      const link = document.createElement("a")
-      link.href = qrCode
-      link.download = `remitflow-qr-${address?.slice(0, 6)}.png`
-      link.click()
+      const link = document.createElement("a");
+      link.href = qrCode;
+      link.download = `BetaRemit-qr-${address?.slice(0, 6)}.png`;
+      link.click();
     }
-  }
+  };
 
   return (
     <DashboardLayout>
@@ -86,7 +92,10 @@ export default function ProfilePage() {
           </Card>
 
           {/* QR Code Card - For Receiving Payments */}
-          <Card className="border-accent/20 animate-slide-up" style={{ animationDelay: "100ms" }}>
+          <Card
+            className="border-accent/20 animate-slide-up"
+            style={{ animationDelay: "100ms" }}
+          >
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <QrCode className="h-5 w-5" />
@@ -97,7 +106,11 @@ export default function ProfilePage() {
             <CardContent className="space-y-4">
               {qrCode && (
                 <div className="flex justify-center p-6 bg-white rounded-lg border border-border animate-scale-in">
-                  <img src={qrCode || "/placeholder.svg"} alt="Wallet QR Code" className="w-64 h-64" />
+                  <img
+                    src={qrCode || "/placeholder.svg"}
+                    alt="Wallet QR Code"
+                    className="w-64 h-64"
+                  />
                 </div>
               )}
               <div className="space-y-2">
@@ -117,10 +130,17 @@ export default function ProfilePage() {
           </Card>
 
           {/* Payment Request Link Builder */}
-          <Card className="animate-slide-up" style={{ animationDelay: "200ms" }}>
+          <Card
+            className="animate-slide-up"
+            style={{ animationDelay: "200ms" }}
+          >
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">Build Payment Request Link</CardTitle>
-              <CardDescription>Create a shareable link so others can pay you quickly</CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                Build Payment Request Link
+              </CardTitle>
+              <CardDescription>
+                Create a shareable link so others can pay you quickly
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <PaymentLinkBuilder />
@@ -128,10 +148,15 @@ export default function ProfilePage() {
           </Card>
 
           {/* Profile Stats */}
-          <div className="grid gap-4 md:grid-cols-3 animate-slide-up" style={{ animationDelay: "250ms" }}>
+          <div
+            className="grid gap-4 md:grid-cols-3 animate-slide-up"
+            style={{ animationDelay: "250ms" }}
+          >
             <Card className="bg-gradient-to-br from-primary/10 to-primary/5">
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium">Account Status</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Account Status
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-primary">Active</div>
@@ -144,24 +169,33 @@ export default function ProfilePage() {
                 <CardTitle className="text-sm font-medium">Network</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-accent">Base Sepolia</div>
+                <div className="text-2xl font-bold text-accent">
+                  Base Sepolia
+                </div>
                 <p className="text-xs text-muted-foreground mt-1">Testnet</p>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-to-br from-secondary/10 to-secondary/5">
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium">Supported Tokens</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Supported Tokens
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">USDC/USDT</div>
-                <p className="text-xs text-muted-foreground mt-1">Stablecoins</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Stablecoins
+                </p>
               </CardContent>
             </Card>
           </div>
 
           {/* Security Info */}
-          <Card className="border-destructive/20 animate-slide-up" style={{ animationDelay: "300ms" }}>
+          <Card
+            className="border-destructive/20 animate-slide-up"
+            style={{ animationDelay: "300ms" }}
+          >
             <CardHeader>
               <CardTitle>Security Information</CardTitle>
               <CardDescription>Keep your wallet address safe</CardDescription>
@@ -181,12 +215,15 @@ export default function ProfilePage() {
               </div>
               <div className="flex gap-3">
                 <div className="text-primary font-bold">•</div>
-                <p>QR codes are safe to share - they only contain your public wallet address</p>
+                <p>
+                  QR codes are safe to share - they only contain your public
+                  wallet address
+                </p>
               </div>
             </CardContent>
           </Card>
         </div>
       </WalletConnectionGuard>
     </DashboardLayout>
-  )
+  );
 }

@@ -1,10 +1,11 @@
-# RemitFlow - Cross-Border Remittance Service
+# BetaRemit - Cross-Border Remittance Service
 
 A modern, fast, and secure cross-border remittance platform built on blockchain technology using USDC and USDT stablecoins on Base Sepolia testnet.
 
 ## Features
 
 ### Core Features
+
 - ✅ **Multi-Token Support**: Send using USDC or USDT
 - ✅ **Country Selection**: 10+ supported countries with real exchange rates
 - ✅ **Wallet Connection**: Secure Web3 wallet integration
@@ -18,6 +19,7 @@ A modern, fast, and secure cross-border remittance platform built on blockchain 
 - ✅ **Animations**: Smooth, emotional UI interactions
 
 ### Standout Features (Planned)
+
 - 🔄 **AI Exchange Rate Prediction**: Get notified of optimal sending times
 - ⚡ **Instant Settlement**: Settle in seconds with liquidity pools
 - 🌍 **Cross-Chain Support**: Send from any chain, receive on any
@@ -39,6 +41,7 @@ A modern, fast, and secure cross-border remittance platform built on blockchain 
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 - MetaMask or compatible Web3 wallet
@@ -46,93 +49,98 @@ A modern, fast, and secure cross-border remittance platform built on blockchain 
 ### Installation
 
 1. Clone the repository:
-\`\`\`bash
-git clone https://github.com/yourusername/remitflow.git
-cd remitflow
-\`\`\`
+   \`\`\`bash
+   git clone https://github.com/yourusername/BetaRemit.git
+   cd BetaRemit
+   \`\`\`
 
 2. Install dependencies:
-\`\`\`bash
-npm install
-\`\`\`
+   \`\`\`bash
+   npm install
+   \`\`\`
 
 3. Set up environment variables:
-\`\`\`bash
-cp .env.example .env.local
-\`\`\`
+   \`\`\`bash
+   cp .env.example .env.local
+   \`\`\`
 
 4. Run the development server:
-\`\`\`bash
-npm run dev
-\`\`\`
+   \`\`\`bash
+   npm run dev
+   \`\`\`
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ### Smart Contract Deployment
 
 1. Deploy the RemittanceService contract to Base Sepolia:
-\`\`\`bash
-npx hardhat run scripts/deploy.ts --network baseSepolia
-\`\`\`
+   \`\`\`bash
+   npx hardhat run scripts/deploy.ts --network baseSepolia
+   \`\`\`
 
 2. Update `REMITTANCE_CONTRACT_ADDRESS` in `lib/web3-config.ts`
 
 ## Project Structure
 
 \`\`\`
-remitflow/
+BetaRemit/
 ├── app/
-│   ├── api/              # API routes
-│   ├── dashboard/        # Dashboard pages
-│   ├── profile/          # User profile
-│   ├── settings/         # Settings page
-│   ├── features/         # Features showcase
-│   ├── layout.tsx        # Root layout
-│   ├── page.tsx          # Home page
-│   └── globals.css       # Global styles
+│ ├── api/ # API routes
+│ ├── dashboard/ # Dashboard pages
+│ ├── profile/ # User profile
+│ ├── settings/ # Settings page
+│ ├── features/ # Features showcase
+│ ├── layout.tsx # Root layout
+│ ├── page.tsx # Home page
+│ └── globals.css # Global styles
 ├── components/
-│   ├── ui/               # Shadcn UI components
-│   ├── header.tsx        # Header component
-│   ├── mobile-nav.tsx    # Mobile navigation
-│   ├── transfer-form.tsx # Transfer form
-│   ├── transaction-history.tsx
-│   ├── web3-provider.tsx # Web3 context
-│   └── ...
+│ ├── ui/ # Shadcn UI components
+│ ├── header.tsx # Header component
+│ ├── mobile-nav.tsx # Mobile navigation
+│ ├── transfer-form.tsx # Transfer form
+│ ├── transaction-history.tsx
+│ ├── web3-provider.tsx # Web3 context
+│ └── ...
 ├── lib/
-│   ├── dummy-data.ts     # Mock data for testing
-│   ├── performance-utils.ts
-│   ├── web3-config.ts    # Web3 configuration
-│   └── utils.ts
+│ ├── dummy-data.ts # Mock data for testing
+│ ├── performance-utils.ts
+│ ├── web3-config.ts # Web3 configuration
+│ └── utils.ts
 ├── contracts/
-│   └── RemittanceService.sol
+│ └── RemittanceService.sol
 └── scripts/
-    └── deploy.ts
+└── deploy.ts
 \`\`\`
 
 ## API Routes
 
 ### User Stats
+
 \`\`\`
 GET /api/user/stats?address=0x...
 \`\`\`
 
 ### Transaction History
+
 \`\`\`
 GET /api/transfers/history?address=0x...
 \`\`\`
 
 ### Rewards Data
+
 \`\`\`
 GET /api/rewards/data?address=0x...
 \`\`\`
 
 ### Batch Transfers
+
 \`\`\`
 GET /api/batch-transfers/list?address=0x...
 GET /api/batch-transfers/status?batchId=batch_001
 \`\`\`
 
 ### Countries & Tokens
+
 \`\`\`
 GET /api/countries/list
 \`\`\`
@@ -152,6 +160,7 @@ All dummy data is cached for 5 minutes to simulate real API behavior.
 ## Performance Optimizations
 
 ### Implemented
+
 - ✅ Response caching (5-minute TTL)
 - ✅ Debounce for search inputs
 - ✅ Throttle for scroll events
@@ -161,6 +170,7 @@ All dummy data is cached for 5 minutes to simulate real API behavior.
 - ✅ Gzip compression
 
 ### Metrics
+
 - First Contentful Paint: 1.2s
 - Largest Contentful Paint: 2.1s
 - Cumulative Layout Shift: 0.05
@@ -196,21 +206,25 @@ All dummy data is cached for 5 minutes to simulate real API behavior.
 ## Roadmap
 
 ### Q1 2024
+
 - [ ] AI exchange rate prediction
 - [ ] Instant settlement integration
 - [ ] Advanced analytics dashboard
 
 ### Q2 2024
+
 - [ ] Multi-signature security
 - [ ] Staking rewards
 - [ ] Recurring transfers
 
 ### Q3 2024
+
 - [ ] Cross-chain support
 - [ ] Insurance coverage
 - [ ] Social features
 
 ### Q4 2024
+
 - [ ] KYC/AML integration
 - [ ] B2B API
 - [ ] Mobile app
@@ -231,7 +245,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Support
 
-For support, email support@remitflow.com or open an issue on GitHub.
+For support, email support@BetaRemit.com or open an issue on GitHub.
 
 ## Acknowledgments
 

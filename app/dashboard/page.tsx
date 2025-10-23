@@ -8,7 +8,7 @@ import { ArrowUpRight, Wallet, Gift, TrendingUp } from "lucide-react"
 import { useWeb3 } from "@/components/web3-provider"
 import { WalletConnectionGuard } from "@/components/wallet-connection-guard"
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { motion, type Variants } from "framer-motion"
 import { DUMMY_USER_STATS } from "@/lib/dummy-data"
 import { useI18n } from "@/components/language-provider"
 
@@ -41,7 +41,7 @@ export default function DashboardPage() {
     }
   }
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -52,12 +52,13 @@ export default function DashboardPage() {
     },
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: "easeOut" },
+      // cubic-bezier for easeOut-like feel to satisfy TS Easing type
+      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
     },
   }
 

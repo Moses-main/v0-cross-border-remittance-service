@@ -23,10 +23,10 @@ export async function GET() {
     miniapp: {
       version: "1",
       name: "Beta Remittance",
-      homeUrl: "htthttps://v0-cross-border-remittance-service.vercel.app",
+      homeUrl: "https://v0-cross-border-remittance-service.vercel.app",
       iconUrl: "https://v0-cross-border-remittance-service.vercel.app/beta.png",
       splashImageUrl:
-        "https://v0-cross-border-remittance-service.vercel.app/splash.png",
+        "https://v0-cross-border-remittance-service.vercel.app/betaRemit.png",
       splashBackgroundColor: "#000000",
       webhookUrl:
         "https://v0-cross-border-remittance-service.vercel.app/api/webhook",

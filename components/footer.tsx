@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Send } from "lucide-react"
+import { Send } from "lucide-react";
 
 export function Footer() {
   return (
@@ -12,7 +12,7 @@ export function Footer() {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                 <Send className="h-4 w-4 text-primary-foreground" />
               </div>
-              <span className="font-bold">RemitFlow</span>
+              <span className="font-bold">BetaRemit</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Fast, secure, and affordable cross-border remittance service
@@ -84,10 +84,10 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
-          <p>&copy; 2025 RemitFlow. All rights reserved.</p>
+          <p>&copy; 2025 BetaRemit. All rights reserved.</p>
           <p>Built on Base Sepolia Network</p>
         </div>
       </div>
     </footer>
-  )
+  );
 }

@@ -1,10 +1,16 @@
-"use client"
+"use client";
 
-import React, { createContext, useContext, useMemo, useState, useEffect } from "react"
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  useEffect,
+} from "react";
 
-export type LanguageCode = "en" | "fr" | "es" | "de"
+export type LanguageCode = "en" | "fr" | "es" | "de";
 
-type Dictionary = Record<string, string>
+type Dictionary = Record<string, string>;
 
 const dictionaries: Record<LanguageCode, Dictionary> = {
   en: {
@@ -29,16 +35,29 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     generate_link: "Generate Link",
     copy_link: "Copy Link",
     saved_recipients: "Saved Recipients",
+    saved_recipients_title: "Saved Recipients",
     add_recipient: "Add Recipient",
+    add_recipient_btn: "Add Recipient",
     name: "Name",
     wallet_address: "Wallet Address",
+    name_optional: "Name (optional)",
+    recipient_wallet: "Recipient Wallet",
+    link_helper_pending: "Link will appear here when recipient wallet is filled",
+    save_changes: "Save Changes",
+    cancel_edit: "Cancel",
+    copy_to_clipboard: "Copy to clipboard",
+    copied: "Copied!",
+    amount_placeholder: "0.00",
+    memo_placeholder: "Add a note (optional)",
+    token_select_placeholder: "Select token",
     save: "Save",
     cancel: "Cancel",
     edit: "Edit",
     delete: "Delete",
     // hero
     hero_title: "Send Money Across Borders",
-    hero_subtitle: "Fast, secure, and affordable remittance service powered by blockchain. Earn cashback and referral rewards on every transaction.",
+    hero_subtitle:
+      "Fast, secure, and affordable remittance service powered by blockchain. Earn cashback and referral rewards on every transaction.",
     cta_get_started: "Get Started",
     cta_learn_more: "Learn More",
     stat_fee_label: "Transfer Fee",
@@ -47,7 +66,8 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     hero_network_label: "Global Remittance Network",
     // features
     features_title: "Powerful Features",
-    features_subtitle: "Everything you need for seamless cross-border remittance",
+    features_subtitle:
+      "Everything you need for seamless cross-border remittance",
     feat_fast_title: "Lightning Fast",
     feat_fast_desc: "Send money in seconds with blockchain-powered transfers",
     feat_cashback_title: "Cashback Rewards",
@@ -62,13 +82,14 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     feat_secure_desc: "Smart contract verified transactions on Base Sepolia",
     // rewards
     rewards_title: "Earn While You Send",
-    rewards_subtitle: "Multiple ways to maximize your earnings on RemitFlow",
+    rewards_subtitle: "Multiple ways to maximize your earnings on BetaRemit",
     cashback: "Cashback",
     referrals: "Referrals",
     volume_bonus: "Volume Bonus",
     cashback_desc: "Earn 1% cashback on all transactions over $1,000",
     referrals_desc: "Earn 0.5% on every transaction from your referrals",
-    volume_bonus_desc: "Unlock higher rewards as you increase your transaction volume",
+    volume_bonus_desc:
+      "Unlock higher rewards as you increase your transaction volume",
     // transfer form
     label_recipient_wallet: "Recipient Wallet Address",
     label_amount: "Amount",
@@ -92,7 +113,8 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     active: "Active",
     verified_account: "Verified account",
     send_remittance_title: "Send Remittance",
-    send_remittance_desc: "Transfer funds to recipients worldwide using USDC or USDT",
+    send_remittance_desc:
+      "Transfer funds to recipients worldwide using USDC or USDT",
     quick_info: "Quick Info",
     transfer_fee_label: "Transfer Fee",
     cashback_rate_label: "Cashback Rate",
@@ -103,7 +125,8 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     transactions: "transactions",
     available_to_withdraw: "Available to withdraw",
     from_your_network: "From your network",
-    connect_your_wallet_to_start_sending_remittances: "Connect your wallet to start sending remittances",
+    connect_your_wallet_to_start_sending_remittances:
+      "Connect your wallet to start sending remittances",
     // request page
     request_payment: "Request Payment",
     prefilled_transfer: "Prefilled transfer based on shared link",
@@ -121,9 +144,11 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     copy_address: "Copy Address",
     copied: "Copied!",
     receive_qr_title: "Receive Funds QR Code",
-    receive_qr_desc: "Share this QR code to receive USDC/USDT payments instantly",
+    receive_qr_desc:
+      "Share this QR code to receive USDC/USDT payments instantly",
     download_qr: "Download QR Code",
-    qr_helper: "Others can scan this QR code to send you USDC or USDT on Base Sepolia",
+    qr_helper:
+      "Others can scan this QR code to send you USDC or USDT on Base Sepolia",
     // recipients book extra
     saved_recipients_title: "Saved Recipients",
     add_recipient_btn: "Add Recipient",
@@ -135,7 +160,8 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     apply_to_selected: "Apply to selected",
     shared_amount: "Shared amount (optional)",
     token_label: "Token",
-    no_saved_recipients: "No saved recipients yet. Add some on the Recipients page.",
+    no_saved_recipients:
+      "No saved recipients yet. Add some on the Recipients page.",
     amount_label_short: "Amount",
     send_to_n_recipients: "Send to",
     recipient_s: "recipient(s)",
@@ -172,15 +198,28 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     generate_link: "Générer le lien",
     copy_link: "Copier le lien",
     saved_recipients: "Bénéficiaires enregistrés",
+    saved_recipients_title: "Bénéficiaires enregistrés",
     add_recipient: "Ajouter",
+    add_recipient_btn: "Ajouter un bénéficiaire",
     name: "Nom",
     wallet_address: "Adresse du portefeuille",
+    name_optional: "Nom (optionnel)",
+    recipient_wallet: "Portefeuille du destinataire",
+    link_helper_pending: "Le lien apparaîtra ici lorsque le portefeuille est rempli",
+    save_changes: "Enregistrer les modifications",
+    cancel_edit: "Annuler",
+    copy_to_clipboard: "Copier dans le presse-papier",
+    copied: "Copié !",
+    amount_placeholder: "0,00",
+    memo_placeholder: "Ajouter une note (optionnel)",
+    token_select_placeholder: "Sélectionner un jeton",
     save: "Enregistrer",
     cancel: "Annuler",
     edit: "Modifier",
     delete: "Supprimer",
     hero_title: "Envoyer de l'argent à travers les frontières",
-    hero_subtitle: "Service de transfert rapide, sécurisé et abordable. Gagnez du cashback et des récompenses de parrainage.",
+    hero_subtitle:
+      "Service de transfert rapide, sécurisé et abordable. Gagnez du cashback et des récompenses de parrainage.",
     cta_get_started: "Commencer",
     cta_learn_more: "En savoir plus",
     stat_fee_label: "Frais de transfert",
@@ -188,7 +227,8 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     stat_available_label: "Disponible",
     hero_network_label: "Réseau de remise mondial",
     features_title: "Fonctionnalités puissantes",
-    features_subtitle: "Tout ce dont vous avez besoin pour des envois transfrontaliers fluides",
+    features_subtitle:
+      "Tout ce dont vous avez besoin pour des envois transfrontaliers fluides",
     feat_fast_title: "Ultra rapide",
     feat_fast_desc: "Envoyez en quelques secondes avec la blockchain",
     feat_cashback_title: "Récompenses cashback",
@@ -202,7 +242,7 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     feat_secure_title: "Sécurisé et transparent",
     feat_secure_desc: "Contrats intelligents vérifiés sur Base Sepolia",
     rewards_title: "Gagnez en envoyant",
-    rewards_subtitle: "Multipliez vos gains avec RemitFlow",
+    rewards_subtitle: "Multipliez vos gains avec BetaRemit",
     cashback: "Cashback",
     referrals: "Parrainages",
     volume_bonus: "Bonus de volume",
@@ -230,7 +270,8 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     active: "Actif",
     verified_account: "Compte vérifié",
     send_remittance_title: "Envoyer une remise",
-    send_remittance_desc: "Transférer des fonds dans le monde entier en USDC/USDT",
+    send_remittance_desc:
+      "Transférer des fonds dans le monde entier en USDC/USDT",
     quick_info: "Infos rapides",
     transfer_fee_label: "Frais de transfert",
     cashback_rate_label: "Taux de cashback",
@@ -241,7 +282,8 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     transactions: "transactions",
     available_to_withdraw: "Disponible au retrait",
     from_your_network: "Depuis votre réseau",
-    connect_your_wallet_to_start_sending_remittances: "Connectez votre portefeuille pour commencer vos envois",
+    connect_your_wallet_to_start_sending_remittances:
+      "Connectez votre portefeuille pour commencer vos envois",
     request_payment: "Demander un paiement",
     prefilled_transfer: "Transfert pré-rempli à partir du lien partagé",
     recipients_title: "Bénéficiaires",
@@ -267,7 +309,8 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     apply_to_selected: "Appliquer aux sélectionnés",
     shared_amount: "Montant partagé (optionnel)",
     token_label: "Token",
-    no_saved_recipients: "Aucun bénéficiaire enregistré. Ajoutez-en sur la page Bénéficiaires.",
+    no_saved_recipients:
+      "Aucun bénéficiaire enregistré. Ajoutez-en sur la page Bénéficiaires.",
     amount_label_short: "Montant",
     send_to_n_recipients: "Envoyer à",
     recipient_s: "destinataire(s)",
@@ -303,15 +346,28 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     generate_link: "Generar enlace",
     copy_link: "Copiar enlace",
     saved_recipients: "Destinatarios guardados",
+    saved_recipients_title: "Destinatarios guardados",
     add_recipient: "Añadir",
+    add_recipient_btn: "Añadir destinatario",
     name: "Nombre",
     wallet_address: "Dirección de cartera",
+    name_optional: "Nombre (opcional)",
+    recipient_wallet: "Cartera del destinatario",
+    link_helper_pending: "El enlace aparecerá aquí cuando completes la cartera",
+    save_changes: "Guardar cambios",
+    cancel_edit: "Cancelar",
+    copy_to_clipboard: "Copiar al portapapeles",
+    copied: "¡Copiado!",
+    amount_placeholder: "0,00",
+    memo_placeholder: "Añadir una nota (opcional)",
+    token_select_placeholder: "Seleccionar token",
     save: "Guardar",
     cancel: "Cancelar",
     edit: "Editar",
     delete: "Eliminar",
     hero_title: "Enviar dinero a través de fronteras",
-    hero_subtitle: "Servicio rápido, seguro y asequible. Gana cashback y recompensas por referidos.",
+    hero_subtitle:
+      "Servicio rápido, seguro y asequible. Gana cashback y recompensas por referidos.",
     cta_get_started: "Comenzar",
     cta_learn_more: "Saber más",
     stat_fee_label: "Comisión",
@@ -333,7 +389,7 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     feat_secure_title: "Seguro y transparente",
     feat_secure_desc: "Contratos inteligentes en Base Sepolia",
     rewards_title: "Gana mientras envías",
-    rewards_subtitle: "Multiplica tus ganancias con RemitFlow",
+    rewards_subtitle: "Multiplica tus ganancias con BetaRemit",
     cashback: "Cashback",
     referrals: "Referidos",
     volume_bonus: "Bono por volumen",
@@ -372,7 +428,8 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     transactions: "transacciones",
     available_to_withdraw: "Disponible para retirar",
     from_your_network: "De tu red",
-    connect_your_wallet_to_start_sending_remittances: "Conecta tu cartera para empezar a enviar",
+    connect_your_wallet_to_start_sending_remittances:
+      "Conecta tu cartera para empezar a enviar",
     request_payment: "Solicitud de pago",
     prefilled_transfer: "Transferencia prellenada desde el enlace compartido",
     recipients_title: "Destinatarios",
@@ -398,7 +455,8 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     apply_to_selected: "Aplicar a seleccionados",
     shared_amount: "Monto compartido (opcional)",
     token_label: "Token",
-    no_saved_recipients: "No hay destinatarios guardados. Añade en la página Destinatarios.",
+    no_saved_recipients:
+      "No hay destinatarios guardados. Añade en la página Destinatarios.",
     amount_label_short: "Cantidad",
     send_to_n_recipients: "Enviar a",
     recipient_s: "destinatario(s)",
@@ -434,15 +492,28 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     generate_link: "Link generieren",
     copy_link: "Link kopieren",
     saved_recipients: "Gespeicherte Empfänger",
+    saved_recipients_title: "Gespeicherte Empfänger",
     add_recipient: "Hinzufügen",
+    add_recipient_btn: "Empfänger hinzufügen",
     name: "Name",
     wallet_address: "Wallet-Adresse",
+    name_optional: "Name (optional)",
+    recipient_wallet: "Wallet des Empfängers",
+    link_helper_pending: "Der Link erscheint hier, sobald die Wallet ausgefüllt ist",
+    save_changes: "Änderungen speichern",
+    cancel_edit: "Abbrechen",
+    copy_to_clipboard: "In die Zwischenablage kopieren",
+    copied: "Kopiert!",
+    amount_placeholder: "0,00",
+    memo_placeholder: "Notiz hinzufügen (optional)",
+    token_select_placeholder: "Token auswählen",
     save: "Speichern",
     cancel: "Abbrechen",
     edit: "Bearbeiten",
     delete: "Löschen",
     hero_title: "Geld grenzüberschreitend senden",
-    hero_subtitle: "Schneller, sicherer und günstiger Service. Verdiene Cashback und Empfehlungsprämien.",
+    hero_subtitle:
+      "Schneller, sicherer und günstiger Service. Verdiene Cashback und Empfehlungsprämien.",
     cta_get_started: "Loslegen",
     cta_learn_more: "Mehr erfahren",
     stat_fee_label: "Gebühr",
@@ -464,7 +535,7 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     feat_secure_title: "Sicher & transparent",
     feat_secure_desc: "Verifizierte Smart Contracts auf Base Sepolia",
     rewards_title: "Verdiene beim Senden",
-    rewards_subtitle: "Mehr Ertrag mit RemitFlow",
+    rewards_subtitle: "Mehr Ertrag mit BetaRemit",
     cashback: "Cashback",
     referrals: "Empfehlungen",
     volume_bonus: "Volumenbonus",
@@ -503,12 +574,14 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     transactions: "Transaktionen",
     available_to_withdraw: "Verfügbar zum Abheben",
     from_your_network: "Aus deinem Netzwerk",
-    connect_your_wallet_to_start_sending_remittances: "Verbinde dein Wallet, um Überweisungen zu starten",
+    connect_your_wallet_to_start_sending_remittances:
+      "Verbinde dein Wallet, um Überweisungen zu starten",
     request_payment: "Zahlungsanfrage",
     prefilled_transfer: "Vorab ausgefüllte Überweisung via Link",
     recipients_title: "Empfänger",
     onoff_title: "On/Off Ramp",
-    onoff_desc: "Tausche zwischen Fiat und Krypto bei vertrauenswürdigen Anbietern",
+    onoff_desc:
+      "Tausche zwischen Fiat und Krypto bei vertrauenswürdigen Anbietern",
     visit_provider: "Besuchen",
     your_profile: "Dein Profil",
     manage_wallet: "Verwalte dein Wallet und empfange Geld",
@@ -529,7 +602,8 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     apply_to_selected: "Auf Auswahl anwenden",
     shared_amount: "Gemeinsamer Betrag (optional)",
     token_label: "Token",
-    no_saved_recipients: "Noch keine Empfänger gespeichert. Füge welche auf der Empfängerseite hinzu.",
+    no_saved_recipients:
+      "Noch keine Empfänger gespeichert. Füge welche auf der Empfängerseite hinzu.",
     amount_label_short: "Betrag",
     send_to_n_recipients: "Senden an",
     recipient_s: "Empfänger",
@@ -543,38 +617,46 @@ const dictionaries: Record<LanguageCode, Dictionary> = {
     contact: "Kontakt",
     more: "Mehr",
   },
-}
+};
 
 type LanguageContextValue = {
-  lang: LanguageCode
-  setLang: (l: LanguageCode) => void
-  t: (key: keyof typeof dictionaries["en"]) => string
-}
+  lang: LanguageCode;
+  setLang: (l: LanguageCode) => void;
+  t: (key: keyof (typeof dictionaries)["en"]) => string;
+};
 
-const LanguageContext = createContext<LanguageContextValue | null>(null)
+const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<LanguageCode>("en")
+  const [lang, setLang] = useState<LanguageCode>("en");
 
   useEffect(() => {
-    const stored = typeof window !== "undefined" ? (localStorage.getItem("lang") as LanguageCode | null) : null
-    if (stored) setLang(stored)
-  }, [])
+    const stored =
+      typeof window !== "undefined"
+        ? (localStorage.getItem("lang") as LanguageCode | null)
+        : null;
+    if (stored) setLang(stored);
+  }, []);
 
   const value = useMemo(() => {
-    const t = (key: keyof typeof dictionaries["en"]) => dictionaries[lang][key] ?? dictionaries.en[key]
+    const t = (key: keyof (typeof dictionaries)["en"]) =>
+      dictionaries[lang][key] ?? dictionaries.en[key];
     const setter = (l: LanguageCode) => {
-      setLang(l)
-      if (typeof window !== "undefined") localStorage.setItem("lang", l)
-    }
-    return { lang, setLang: setter, t }
-  }, [lang])
+      setLang(l);
+      if (typeof window !== "undefined") localStorage.setItem("lang", l);
+    };
+    return { lang, setLang: setter, t };
+  }, [lang]);
 
-  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
+  return (
+    <LanguageContext.Provider value={value}>
+      {children}
+    </LanguageContext.Provider>
+  );
 }
 
 export function useI18n() {
-  const ctx = useContext(LanguageContext)
-  if (!ctx) throw new Error("useI18n must be used within LanguageProvider")
-  return ctx
+  const ctx = useContext(LanguageContext);
+  if (!ctx) throw new Error("useI18n must be used within LanguageProvider");
+  return ctx;
 }

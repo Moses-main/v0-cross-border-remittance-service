@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Pencil, Plus, Save, Trash2, User } from "lucide-react"
+import { useI18n } from "./language-provider"
 
 export type Recipient = {
   id: string
@@ -29,6 +30,7 @@ function saveRecipients(list: Recipient[]) {
 }
 
 export function RecipientsBook() {
+  const { t } = useI18n()
   const [recipients, setRecipients] = useState<Recipient[]>([])
   const [draft, setDraft] = useState<Partial<Recipient>>({ name: "", address: "" })
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -72,16 +74,16 @@ export function RecipientsBook() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Saved Recipients</CardTitle>
+          <CardTitle>{t("saved_recipients_title")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid sm:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">{t("name")}</Label>
               <Input id="name" value={draft.name || ""} onChange={(e) => setDraft((p) => ({ ...p, name: e.target.value }))} />
             </div>
             <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="address">Wallet Address</Label>
+              <Label htmlFor="address">{t("wallet_address")}</Label>
               <Input
                 id="address"
                 value={draft.address || ""}
@@ -94,16 +96,16 @@ export function RecipientsBook() {
           <div className="flex gap-2">
             {editingId ? (
               <Button onClick={() => updateRecipient(editingId)} disabled={!isValid}>
-                <Save className="mr-2 h-4 w-4" /> Save Changes
+                <Save className="mr-2 h-4 w-4" /> {t("save_changes")}
               </Button>
             ) : (
               <Button onClick={addRecipient} disabled={!isValid}>
-                <Plus className="mr-2 h-4 w-4" /> Add Recipient
+                <Plus className="mr-2 h-4 w-4" /> {t("add_recipient_btn")}
               </Button>
             )}
             {editingId && (
               <Button variant="outline" onClick={() => (setEditingId(null), setDraft({ name: "", address: "" }))}>
-                Cancel
+                {t("cancel_edit")}
               </Button>
             )}
           </div>

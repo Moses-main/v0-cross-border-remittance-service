@@ -1,16 +1,34 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { Zap, Shield, TrendingUp, Users, Lock, Globe, Smartphone, BarChart3, Coins, RefreshCw } from "lucide-react"
+import { motion } from "framer-motion";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import {
+  Zap,
+  Shield,
+  TrendingUp,
+  Users,
+  Lock,
+  Globe,
+  Smartphone,
+  BarChart3,
+  Coins,
+  RefreshCw,
+} from "lucide-react";
 
 const features = [
   {
     icon: Zap,
     title: "Instant Settlement",
-    description: "Settle transfers in seconds with our liquidity pool integration",
+    description:
+      "Settle transfers in seconds with our liquidity pool integration",
     color: "from-yellow-500 to-orange-500",
   },
   {
@@ -67,7 +85,7 @@ const features = [
     description: "Automate monthly or weekly remittances",
     color: "from-pink-500 to-purple-500",
   },
-]
+];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -78,7 +96,7 @@ const containerVariants = {
       delayChildren: 0.2,
     },
   },
-}
+};
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -87,7 +105,7 @@ const itemVariants = {
     y: 0,
     transition: { duration: 0.5, ease: "easeOut" },
   },
-}
+};
 
 export default function FeaturesPage() {
   return (
@@ -103,9 +121,12 @@ export default function FeaturesPage() {
             transition={{ duration: 0.6 }}
             className="mb-12 text-center"
           >
-            <h1 className="text-4xl font-bold md:text-5xl">Standout Features</h1>
+            <h1 className="text-4xl font-bold md:text-5xl">
+              Standout Features
+            </h1>
             <p className="mt-4 text-lg text-muted-foreground">
-              What makes RemitFlow different from other crypto remittance services
+              What makes BetaRemit different from other crypto remittance
+              services
             </p>
           </motion.div>
 
@@ -116,7 +137,7 @@ export default function FeaturesPage() {
             className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
           >
             {features.map((feature, index) => {
-              const Icon = feature.icon
+              const Icon = feature.icon;
               return (
                 <motion.div key={index} variants={itemVariants}>
                   <Card className="group relative overflow-hidden border-border/50 transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
@@ -130,11 +151,13 @@ export default function FeaturesPage() {
                       <CardTitle className="text-xl">{feature.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <CardDescription className="text-base">{feature.description}</CardDescription>
+                      <CardDescription className="text-base">
+                        {feature.description}
+                      </CardDescription>
                     </CardContent>
                   </Card>
                 </motion.div>
-              )
+              );
             })}
           </motion.div>
         </div>
@@ -151,7 +174,8 @@ export default function FeaturesPage() {
           >
             <h2 className="text-3xl font-bold">Coming Soon</h2>
             <p className="mt-4 text-muted-foreground">
-              We're constantly innovating to bring you the best remittance experience. Here's what's on our roadmap:
+              We're constantly innovating to bring you the best remittance
+              experience. Here's what's on our roadmap:
             </p>
             <ul className="mt-6 space-y-3">
               <li className="flex items-center gap-3">
@@ -182,5 +206,5 @@ export default function FeaturesPage() {
       <div className="h-20 md:h-0" />
       <Footer />
     </main>
-  )
+  );
 }

@@ -1,18 +1,21 @@
-# RemitFlow - Performance Optimization Guide
+# BetaRemit - Performance Optimization Guide
 
 ## Current Optimizations Implemented
 
 ### 1. **Response Caching**
+
 - 5-minute cache for all API responses
 - Reduces database queries by 80%
 - Automatic cache invalidation
 
 ### 2. **Dummy Data System**
+
 - Instant data loading without API calls
 - Perfect for testing and simulation
 - Realistic transaction data
 
 ### 3. **Utility Functions**
+
 - `debounce()`: Prevents excessive function calls
 - `throttle()`: Limits event handler frequency
 - `lazyLoadImages()`: Load images on demand
@@ -22,19 +25,20 @@
 
 ## Performance Metrics Target
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| First Contentful Paint (FCP) | < 1.5s | 1.2s |
-| Largest Contentful Paint (LCP) | < 2.5s | 2.1s |
-| Cumulative Layout Shift (CLS) | < 0.1 | 0.05 |
-| Time to Interactive (TTI) | < 3.5s | 2.8s |
-| Lighthouse Score | > 90 | 92 |
+| Metric                         | Target | Current |
+| ------------------------------ | ------ | ------- |
+| First Contentful Paint (FCP)   | < 1.5s | 1.2s    |
+| Largest Contentful Paint (LCP) | < 2.5s | 2.1s    |
+| Cumulative Layout Shift (CLS)  | < 0.1  | 0.05    |
+| Time to Interactive (TTI)      | < 3.5s | 2.8s    |
+| Lighthouse Score               | > 90   | 92      |
 
 ---
 
 ## Implementation Checklist
 
 ### Frontend Optimizations
+
 - [x] Lazy load components with React.lazy()
 - [x] Use React.memo for expensive components
 - [x] Implement virtual scrolling for long lists
@@ -44,6 +48,7 @@
 - [x] Use CDN for static assets
 
 ### API Optimizations
+
 - [x] Implement response caching
 - [x] Add pagination for large datasets
 - [x] Compress API responses
@@ -51,12 +56,14 @@
 - [x] Implement rate limiting
 
 ### Database Optimizations
+
 - [ ] Add database indexes
 - [ ] Implement query optimization
 - [ ] Use connection pooling
 - [ ] Archive old transactions
 
 ### Monitoring & Analytics
+
 - [ ] Set up performance monitoring
 - [ ] Track Core Web Vitals
 - [ ] Monitor API response times
@@ -67,6 +74,7 @@
 ## Usage Examples
 
 ### Using Cached Responses
+
 \`\`\`typescript
 import { getCachedResponse, setCachedResponse } from "@/lib/performance-utils"
 
@@ -82,20 +90,22 @@ setCachedResponse("user_stats", data)
 \`\`\`
 
 ### Using Debounce for Search
+
 \`\`\`typescript
 import { debounce } from "@/lib/performance-utils"
 
 const handleSearch = debounce((query: string) => {
-  // API call here
+// API call here
 }, 300)
 \`\`\`
 
 ### Using Throttle for Scroll
+
 \`\`\`typescript
 import { throttle } from "@/lib/performance-utils"
 
 const handleScroll = throttle(() => {
-  // Scroll handler
+// Scroll handler
 }, 100)
 
 window.addEventListener("scroll", handleScroll)
