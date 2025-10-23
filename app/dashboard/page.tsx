@@ -10,9 +10,11 @@ import { WalletConnectionGuard } from "@/components/wallet-connection-guard"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { DUMMY_USER_STATS } from "@/lib/dummy-data"
+import { useI18n } from "@/components/language-provider"
 
 export default function DashboardPage() {
   const { isConnected, address } = useWeb3()
+  const { t } = useI18n()
   const [stats, setStats] = useState({
     totalSent: "0.00",
     cashbackBalance: "0.00",
@@ -61,51 +63,51 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <WalletConnectionGuard fallbackMessage="Connect your wallet to start sending remittances">
+      <WalletConnectionGuard fallbackMessage={t("connect_your_wallet_to_start_sending_remittances")}>
         <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-8">
           {/* Stats Overview */}
           <motion.div variants={itemVariants} className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card className="border-border/50 hover:border-primary/50 transition-colors">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Sent</CardTitle>
+                <CardTitle className="text-sm font-medium">{t("total_sent")}</CardTitle>
                 <ArrowUpRight className="h-4 w-4 text-destructive" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">${stats.totalSent}</div>
-                <p className="text-xs text-muted-foreground">{stats.transactionCount} transactions</p>
+                <p className="text-xs text-muted-foreground">{stats.transactionCount} {t("transactions")}</p>
               </CardContent>
             </Card>
 
             <Card className="border-border/50 hover:border-primary/50 transition-colors">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Cashback Balance</CardTitle>
+                <CardTitle className="text-sm font-medium">{t("cashback_balance")}</CardTitle>
                 <Gift className="h-4 w-4 text-accent" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">${stats.cashbackBalance}</div>
-                <p className="text-xs text-muted-foreground">Available to withdraw</p>
+                <p className="text-xs text-muted-foreground">{t("available_to_withdraw")}</p>
               </CardContent>
             </Card>
 
             <Card className="border-border/50 hover:border-primary/50 transition-colors">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Referral Rewards</CardTitle>
+                <CardTitle className="text-sm font-medium">{t("referral_rewards")}</CardTitle>
                 <Wallet className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">${stats.referralRewards}</div>
-                <p className="text-xs text-muted-foreground">From your network</p>
+                <p className="text-xs text-muted-foreground">{t("from_your_network")}</p>
               </CardContent>
             </Card>
 
             <Card className="border-border/50 hover:border-primary/50 transition-colors">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Account Status</CardTitle>
+                <CardTitle className="text-sm font-medium">{t("account_status")}</CardTitle>
                 <TrendingUp className="h-4 w-4 text-primary" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">Active</div>
-                <p className="text-xs text-muted-foreground">Verified account</p>
+                <div className="text-2xl font-bold">{t("active")}</div>
+                <p className="text-xs text-muted-foreground">{t("verified_account")}</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -115,8 +117,8 @@ export default function DashboardPage() {
             <div className="lg:col-span-2">
               <Card className="border-border/50">
                 <CardHeader>
-                  <CardTitle>Send Remittance</CardTitle>
-                  <CardDescription>Transfer funds to recipients worldwide using USDC or USDT</CardDescription>
+                  <CardTitle>{t("send_remittance_title")}</CardTitle>
+                  <CardDescription>{t("send_remittance_desc")}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <TransferForm userAddress={address || ""} />
@@ -127,19 +129,19 @@ export default function DashboardPage() {
             <div>
               <Card className="border-border/50">
                 <CardHeader>
-                  <CardTitle className="text-lg">Quick Info</CardTitle>
+                  <CardTitle className="text-lg">{t("quick_info")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <p className="text-sm font-medium">Transfer Fee</p>
+                    <p className="text-sm font-medium">{t("transfer_fee_label")}</p>
                     <p className="text-2xl font-bold text-primary">0.5%</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-sm font-medium">Cashback Rate</p>
+                    <p className="text-sm font-medium">{t("cashback_rate_label")}</p>
                     <p className="text-2xl font-bold text-accent">1%</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-sm font-medium">Min Transfer</p>
+                    <p className="text-sm font-medium">{t("min_transfer_label")}</p>
                     <p className="text-2xl font-bold">$10</p>
                   </div>
                 </CardContent>
@@ -151,8 +153,8 @@ export default function DashboardPage() {
           <motion.div variants={itemVariants}>
             <Card className="border-border/50">
               <CardHeader>
-                <CardTitle>Transaction History</CardTitle>
-                <CardDescription>Your recent transfers and transactions</CardDescription>
+                <CardTitle>{t("transaction_history")}</CardTitle>
+                <CardDescription>{t("recent_transfers")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <TransactionHistory userAddress={address || ""} />

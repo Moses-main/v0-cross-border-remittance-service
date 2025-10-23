@@ -6,10 +6,12 @@ import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { TransferForm } from "@/components/transfer-form"
 import { useWeb3 } from "@/components/web3-provider"
+import { useI18n } from "@/components/language-provider"
 
 export default function RequestPage() {
   const params = useSearchParams()
   const { address } = useWeb3()
+  const { t } = useI18n()
 
   const initialData = useMemo(() => {
     const to = params.get("to") || ""
@@ -33,10 +35,8 @@ export default function RequestPage() {
       <div className="max-w-3xl mx-auto space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Request Payment</CardTitle>
-            <CardDescription>
-              {payeeName ? `Sending to ${payeeName}` : "Prefilled transfer based on shared link"}
-            </CardDescription>
+            <CardTitle>{t("request_payment")}</CardTitle>
+            <CardDescription>{payeeName ? `${t("sending_to")} ${payeeName}` : t("prefilled_transfer")}</CardDescription>
           </CardHeader>
           <CardContent>
             <TransferForm userAddress={address || ""} initialData={initialData} />

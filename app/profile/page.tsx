@@ -9,9 +9,11 @@ import { useState, useEffect } from "react"
 import QRCode from "qrcode"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { PaymentLinkBuilder } from "@/components/payment-link-builder"
+import { useI18n } from "@/components/language-provider"
 
 export default function ProfilePage() {
   const { isConnected, address } = useWeb3()
+  const { t } = useI18n()
   const [qrCode, setQrCode] = useState<string>("")
   const [copied, setCopied] = useState(false)
 
@@ -51,12 +53,12 @@ export default function ProfilePage() {
 
   return (
     <DashboardLayout>
-      <WalletConnectionGuard fallbackMessage="Connect your wallet to view your profile and receive funds">
+      <WalletConnectionGuard fallbackMessage={t("connect_wallet")}>
         <div className="space-y-8 max-w-4xl mx-auto">
           {/* Profile Header */}
           <div className="animate-fade-in">
-            <h1 className="text-4xl font-bold mb-2">Your Profile</h1>
-            <p className="text-muted-foreground">Manage your wallet and receive funds</p>
+            <h1 className="text-4xl font-bold mb-2">{t("your_profile")}</h1>
+            <p className="text-muted-foreground">{t("manage_wallet")}</p>
           </div>
 
           {/* Wallet Address Card */}
@@ -64,9 +66,9 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <QrCode className="h-5 w-5" />
-                Wallet Address
+                {t("wallet_address_title")}
               </CardTitle>
-              <CardDescription>Your unique wallet address for receiving remittances</CardDescription>
+              <CardDescription>{t("wallet_address_desc")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="p-4 bg-secondary/30 rounded-lg border border-border font-mono text-sm break-all animate-pulse-subtle">
@@ -78,7 +80,7 @@ export default function ProfilePage() {
                 className="w-full transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent"
               >
                 <Copy className="mr-2 h-4 w-4" />
-                {copied ? "Copied!" : "Copy Address"}
+                {copied ? t("copied") : t("copy_address")}
               </Button>
             </CardContent>
           </Card>
@@ -88,9 +90,9 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <QrCode className="h-5 w-5" />
-                Receive Funds QR Code
+                {t("receive_qr_title")}
               </CardTitle>
-              <CardDescription>Share this QR code to receive USDC/USDT payments instantly</CardDescription>
+              <CardDescription>{t("receive_qr_desc")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {qrCode && (
@@ -105,10 +107,10 @@ export default function ProfilePage() {
                   className="w-full transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent"
                 >
                   <Download className="mr-2 h-4 w-4" />
-                  Download QR Code
+                  {t("download_qr")}
                 </Button>
                 <p className="text-xs text-muted-foreground text-center">
-                  Others can scan this QR code to send you USDC or USDT on Base Sepolia
+                  {t("qr_helper")}
                 </p>
               </div>
             </CardContent>
