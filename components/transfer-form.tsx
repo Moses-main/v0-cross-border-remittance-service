@@ -2,14 +2,15 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
-import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react"
+import { AlertCircle, CheckCircle2, Loader2, UserPlus } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { useI18n } from "./language-provider"
 
 const COUNTRIES = [
   { code: "PH", name: "Philippines", currency: "PHP" },
@@ -31,9 +32,17 @@ const PAYMENT_CURRENCIES = [
 
 interface TransferFormProps {
   userAddress: string
+  initialData?: Partial<{
+    recipientAddress: string
+    amount: string
+    country: string
+    paymentCurrency: string
+    description: string
+  }>
 }
 
-export function TransferForm({ userAddress }: TransferFormProps) {
+export function TransferForm({ userAddress, initialData }: TransferFormProps) {
+  const { t } = useI18n()
   const [formData, setFormData] = useState({
     recipientAddress: "",
     amount: "",
@@ -41,9 +50,29 @@ export function TransferForm({ userAddress }: TransferFormProps) {
     paymentCurrency: "USDC",
     description: "",
   })
+  useEffect(() => {
+    if (initialData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...initialData,
+        paymentCurrency: (initialData.paymentCurrency as string) || prev.paymentCurrency,
+      }))
+    }
+  }, [initialData])
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle")
   const [message, setMessage] = useState("")
+  const [savedRecipients, setSavedRecipients] = useState<Array<{ id: string; name: string; address: string }>>([])
+  const [showSavePrompt, setShowSavePrompt] = useState(false)
+
+  useEffect(() => {
+    try {
+      const raw = typeof window !== "undefined" ? localStorage.getItem("recipients") : null
+      setSavedRecipients(raw ? JSON.parse(raw) : [])
+    } catch {
+      setSavedRecipients([])
+    }
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -79,6 +108,9 @@ export function TransferForm({ userAddress }: TransferFormProps) {
         setStatus("success")
         setMessage("Transfer initiated successfully! Transaction hash: " + data.txHash)
         setFormData({ recipientAddress: "", amount: "", country: "", paymentCurrency: "USDC", description: "" })
+        // Prompt to save recipient if not already saved
+        const exists = savedRecipients.some((r) => r.address.toLowerCase() === (formData.recipientAddress || "").toLowerCase())
+        setShowSavePrompt(!exists && !!formData.recipientAddress)
       } else {
         setStatus("error")
         setMessage(data.error || "Failed to create transfer")
@@ -100,8 +132,26 @@ export function TransferForm({ userAddress }: TransferFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in">
+      {/* Quick pick recipient */}
+      {savedRecipients.length > 0 && (
+        <div className="space-y-2">
+          <Label htmlFor="savedRecipient">{t("quick_pick_recipient")}</Label>
+          <Select onValueChange={(val) => setFormData((p) => ({ ...p, recipientAddress: val }))}>
+            <SelectTrigger id="savedRecipient" className="transition-all duration-300">
+              <SelectValue placeholder={t("select_saved_recipient")} />
+            </SelectTrigger>
+            <SelectContent>
+              {savedRecipients.map((r) => (
+                <SelectItem key={r.id} value={r.address}>
+                  {r.name} — {r.address.slice(0, 6)}...{r.address.slice(-4)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
       <div className="space-y-2">
-        <Label htmlFor="recipientAddress">Recipient Wallet Address</Label>
+        <Label htmlFor="recipientAddress">{t("label_recipient_wallet")}</Label>
         <Input
           id="recipientAddress"
           name="recipientAddress"
@@ -115,7 +165,7 @@ export function TransferForm({ userAddress }: TransferFormProps) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="amount">Amount</Label>
+          <Label htmlFor="amount">{t("label_amount")}</Label>
           <Input
             id="amount"
             name="amount"
@@ -131,10 +181,10 @@ export function TransferForm({ userAddress }: TransferFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="paymentCurrency">Payment Currency</Label>
+          <Label htmlFor="paymentCurrency">{t("label_payment_currency")}</Label>
           <Select value={formData.paymentCurrency} onValueChange={handlePaymentCurrencyChange}>
             <SelectTrigger id="paymentCurrency" className="transition-all duration-300">
-              <SelectValue placeholder="Select currency" />
+              <SelectValue placeholder={t("label_payment_currency")} />
             </SelectTrigger>
             <SelectContent>
               {PAYMENT_CURRENCIES.map((currency) => (
@@ -149,10 +199,10 @@ export function TransferForm({ userAddress }: TransferFormProps) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="country">Destination Country</Label>
+          <Label htmlFor="country">{t("label_destination_country")}</Label>
           <Select value={formData.country} onValueChange={handleCountryChange}>
             <SelectTrigger id="country" className="transition-all duration-300">
-              <SelectValue placeholder="Select country" />
+              <SelectValue placeholder={t("label_destination_country")} />
             </SelectTrigger>
             <SelectContent>
               {COUNTRIES.map((country) => (
@@ -167,7 +217,7 @@ export function TransferForm({ userAddress }: TransferFormProps) {
         {/* Display selected country currency */}
         {selectedCountry && (
           <div className="space-y-2">
-            <Label>Recipient Currency</Label>
+            <Label>{t("label_recipient_currency")}</Label>
             <div className="flex items-center justify-center h-10 px-3 border border-border rounded-md bg-secondary/30 animate-pulse-subtle">
               <span className="font-medium text-sm">{selectedCountry.currency}</span>
             </div>
@@ -176,11 +226,11 @@ export function TransferForm({ userAddress }: TransferFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description">Description (Optional)</Label>
+        <Label htmlFor="description">{t("label_description_optional")}</Label>
         <textarea
           id="description"
           name="description"
-          placeholder="Add a note for the recipient"
+          placeholder={t("label_description_optional")}
           value={formData.description}
           onChange={handleChange}
           className="w-full px-3 py-2 border border-border rounded-md bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-300"
@@ -193,25 +243,25 @@ export function TransferForm({ userAddress }: TransferFormProps) {
         <Card className="bg-secondary/30 border-primary/20 animate-slide-up">
           <CardContent className="pt-6 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Amount</span>
+              <span className="text-muted-foreground">{t("breakdown_amount")}</span>
               <span className="font-medium">
                 {formData.paymentCurrency} {amount.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Transfer Fee (0.5%)</span>
+              <span className="text-muted-foreground">{t("breakdown_fee")}</span>
               <span className="font-medium text-destructive">
                 -{formData.paymentCurrency} {fee.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Cashback (1%)</span>
+              <span className="text-muted-foreground">{t("breakdown_cashback")}</span>
               <span className="font-medium text-accent">
                 +{formData.paymentCurrency} {cashback.toFixed(2)}
               </span>
             </div>
             <div className="border-t border-border pt-2 flex justify-between">
-              <span className="font-medium">Total to Send</span>
+              <span className="font-medium">{t("breakdown_total")}</span>
               <span className="font-bold text-primary">
                 {formData.paymentCurrency} {total.toFixed(2)}
               </span>
@@ -234,6 +284,41 @@ export function TransferForm({ userAddress }: TransferFormProps) {
         </Alert>
       )}
 
+      {/* Save recipient prompt */}
+      {showSavePrompt && (
+        <div className="flex items-center justify-between gap-2 p-3 border border-border rounded-md bg-secondary/30 animate-slide-up">
+          <div className="flex items-center gap-2 text-sm">
+            <UserPlus className="h-4 w-4 text-primary" />
+            <span>Save this recipient for future payments?</span>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => setShowSavePrompt(false)}
+            >
+              Not now
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => {
+                try {
+                  const list = savedRecipients.length ? [...savedRecipients] : []
+                  list.push({ id: crypto.randomUUID(), name: formData.description || "Recipient", address: formData.recipientAddress })
+                  localStorage.setItem("recipients", JSON.stringify(list))
+                  setSavedRecipients(list)
+                } catch {}
+                setShowSavePrompt(false)
+              }}
+            >
+              Save
+            </Button>
+          </div>
+        </div>
+      )}
+
       <Button
         type="submit"
         disabled={isLoading}
@@ -242,10 +327,10 @@ export function TransferForm({ userAddress }: TransferFormProps) {
         {isLoading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Processing...
+            {t("processing")}
           </>
         ) : (
-          "Send Remittance"
+          t("btn_send_remittance")
         )}
       </Button>
     </form>

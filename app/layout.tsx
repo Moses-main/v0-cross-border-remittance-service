@@ -6,6 +6,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Web3Provider } from "@/components/web3-provider"
 import { MobileNav } from "@/components/mobile-nav"
+import { LanguageProvider } from "@/components/language-provider"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -25,10 +26,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <Web3Provider>
-            <MobileNav />
-            {children}
-          </Web3Provider>
+          <LanguageProvider>
+            <Web3Provider>
+              <MobileNav />
+              {children}
+            </Web3Provider>
+          </LanguageProvider>
         </ThemeProvider>
         <Analytics />
       </body>

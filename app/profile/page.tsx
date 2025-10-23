@@ -8,6 +8,7 @@ import { Copy, Download, QrCode } from "lucide-react"
 import { useState, useEffect } from "react"
 import QRCode from "qrcode"
 import { DashboardLayout } from "@/components/dashboard-layout"
+import { PaymentLinkBuilder } from "@/components/payment-link-builder"
 
 export default function ProfilePage() {
   const { isConnected, address } = useWeb3()
@@ -113,8 +114,19 @@ export default function ProfilePage() {
             </CardContent>
           </Card>
 
+          {/* Payment Request Link Builder */}
+          <Card className="animate-slide-up" style={{ animationDelay: "200ms" }}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">Build Payment Request Link</CardTitle>
+              <CardDescription>Create a shareable link so others can pay you quickly</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PaymentLinkBuilder />
+            </CardContent>
+          </Card>
+
           {/* Profile Stats */}
-          <div className="grid gap-4 md:grid-cols-3 animate-slide-up" style={{ animationDelay: "200ms" }}>
+          <div className="grid gap-4 md:grid-cols-3 animate-slide-up" style={{ animationDelay: "250ms" }}>
             <Card className="bg-gradient-to-br from-primary/10 to-primary/5">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium">Account Status</CardTitle>

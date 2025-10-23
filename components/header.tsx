@@ -7,6 +7,8 @@ import { useWeb3 } from "./web3-provider"
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { LanguageSelector } from "./language-selector"
+import { useI18n } from "./language-provider"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,18 +17,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-const NAV_ITEMS = [
-  { href: "/", label: "Home" },
-  { href: "/dashboard", label: "Transfer" },
-  { href: "/dashboard/rewards", label: "Rewards" },
-  { href: "/profile", label: "Profile" },
-  { href: "/settings", label: "Settings" },
+const DIRECT_LINKS = [
+  { href: "/", key: "home" },
+  { href: "/dashboard/rewards", key: "rewards" },
 ]
 
 export function Header() {
   const { isConnected, address, connectWallet, disconnectWallet } = useWeb3()
   const [isConnecting, setIsConnecting] = useState(false)
   const pathname = usePathname()
+  const { t } = useI18n()
 
   const handleWalletClick = async () => {
     setIsConnecting(true)
@@ -53,8 +53,8 @@ export function Header() {
           <h1 className="text-lg sm:text-xl font-bold text-foreground">RemitFlow</h1>
         </div>
 
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-          {NAV_ITEMS.map((item) => {
+        <nav className="hidden md:flex items-center gap-4 lg:gap-6">
+          {DIRECT_LINKS.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
             return (
               <Link
@@ -66,13 +66,59 @@ export function Header() {
                     : "text-muted-foreground hover:text-foreground after:w-0 hover:after:w-full hover:after:bg-muted-foreground/60"
                 }`}
               >
-                {item.label}
+                {t(item.key)}
               </Link>
             )
           })}
+
+          {/* Pay group */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="text-sm">
+                {t("pay")}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem asChild>
+                <Link href="/dashboard">{t("transfer")}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/request">{t("request")}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/group-pay">{t("group_pay")}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/recipients">{t("recipients")}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/onramp">{t("onramp")}</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Account group */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="text-sm">
+                {t("account")}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem asChild>
+                <Link href="/profile">{t("profile")}</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/settings">{t("settings")}</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          <div className="block">
+            <LanguageSelector />
+          </div>
           <ThemeToggle />
 
           {isConnected ? (
@@ -106,7 +152,7 @@ export function Header() {
               disabled={isConnecting}
               className="hidden sm:inline-flex text-xs sm:text-sm transition-all duration-300 hover:scale-105 active:scale-95"
             >
-              {isConnecting ? "Connecting..." : "Connect Wallet"}
+              {isConnecting ? "Connecting..." : t("connect_wallet")}
             </Button>
           )}
 

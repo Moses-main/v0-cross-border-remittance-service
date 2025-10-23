@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Bell, Lock, Eye, Globe } from "lucide-react"
 import { useState } from "react"
+import { useI18n, type LanguageCode } from "@/components/language-provider"
+import { LanguageSelector } from "@/components/language-selector"
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState({
@@ -15,6 +17,7 @@ export default function SettingsPage() {
     twoFactor: false,
     publicProfile: false,
   })
+  const { t, lang, setLang } = useI18n()
 
   const handleToggle = (key: keyof typeof settings) => {
     setSettings((prev) => ({ ...prev, [key]: !prev[key] }))
@@ -25,7 +28,7 @@ export default function SettingsPage() {
       <div className="space-y-8 max-w-2xl mx-auto">
         {/* Settings Header */}
         <div className="animate-fade-in">
-          <h1 className="text-4xl font-bold mb-2">Settings</h1>
+          <h1 className="text-4xl font-bold mb-2">{t("settings")}</h1>
           <p className="text-muted-foreground">Manage your account preferences and security</p>
         </div>
 
@@ -113,12 +116,13 @@ export default function SettingsPage() {
             <CardDescription>Customize your experience</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button
-              variant="outline"
-              className="w-full transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent"
-            >
-              English (US)
-            </Button>
+            <div className="space-y-2">
+              <Label htmlFor="language">Language</Label>
+              <div className="flex items-center gap-2">
+                <LanguageSelector />
+                <span className="text-sm text-muted-foreground">Current: {lang.toUpperCase()}</span>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
