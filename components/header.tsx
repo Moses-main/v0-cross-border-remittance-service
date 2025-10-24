@@ -19,6 +19,7 @@ import {
 
 const DIRECT_LINKS = [
   { href: "/", key: "home" },
+  { href: "/transfer", key: "Send Money" },
   { href: "/dashboard/rewards", key: "rewards" },
 ];
 
