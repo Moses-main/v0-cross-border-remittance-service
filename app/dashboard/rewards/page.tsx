@@ -11,7 +11,7 @@ import { useWeb3 } from "@/components/web3-provider"
 import { useState, useEffect } from "react"
 
 export default function RewardsPage() {
-  const { isConnected, address } = useWeb3()
+  const { isConnected, address, userInfo, loading, withdrawCashback } = useWeb3()
   const [rewardsData, setRewardsData] = useState({
     cashbackBalance: "0.00",
     referralRewards: "0.00",
@@ -23,22 +23,23 @@ export default function RewardsPage() {
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
-    if (isConnected && address) {
-      fetchRewardsData(address)
-    }
-  }, [isConnected, address])
+    if (isConnected && address && userInfo) {
+      // Update rewards data from Web3 context
+      const cashbackFloat = parseFloat(userInfo.cashbackEarned.toString()) / 1e6 // Convert from wei to USDC
+      const referralFloat = parseFloat(userInfo.referralRewards.toString()) / 1e6 // Convert from wei to USDC
+      const totalEarned = (cashbackFloat + referralFloat).toFixed(2)
+      const tier = userInfo.referralCount >= 5 ? "Gold" : userInfo.referralCount >= 2 ? "Silver" : "Bronze"
 
-  const fetchRewardsData = async (userAddress: string) => {
-    try {
-      const response = await fetch(`/api/rewards/data?address=${userAddress}`)
-      if (response.ok) {
-        const data = await response.json()
-        setRewardsData(data)
-      }
-    } catch (error) {
-      console.error("Failed to fetch rewards data:", error)
+      setRewardsData({
+        cashbackBalance: cashbackFloat.toFixed(2),
+        referralRewards: referralFloat.toFixed(2),
+        totalEarned,
+        referralCode: `REF-${address.slice(2, 8).toUpperCase()}`,
+        referralCount: userInfo.referralCount,
+        tier,
+      })
     }
-  }
+  }, [isConnected, address, userInfo])
 
   const handleCopyReferralCode = () => {
     navigator.clipboard.writeText(rewardsData.referralCode)

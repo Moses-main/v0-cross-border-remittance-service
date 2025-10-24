@@ -1,133 +1,54 @@
 "use client"
 
 import type React from "react"
-import { createContext, useContext, useState, useCallback, useEffect } from "react"
+import { createContext, useContext } from "react"
+import { useWallet } from "@/hooks/useWallet"
 
 interface Web3ContextType {
   isConnected: boolean
   address: string | null
+  account: string | null // Alias for address for compatibility
   chainId: number | null
-  connectWallet: () => Promise<void>
-  disconnectWallet: () => void
+  provider: any
+  connect: () => Promise<void>
+  disconnect: () => void
   isConnecting: boolean
   error: string | null
+  connectWallet: () => Promise<void>
+  disconnectWallet: () => void
+  // Smart contract methods
+  initiateTransfer: (params: any) => Promise<{ txHash: string }>
+  registerUser: (referrer: string) => Promise<string>
+  withdrawCashback: (tokenAddress: string) => Promise<string>
+  // User data
+  userInfo: any
+  transactions: any[]
+  loading: {
+    userInfo: boolean
+    transactions: boolean
+    transaction: boolean
+  }
+  clearError: () => void
 }
 
 const Web3Context = createContext<Web3ContextType | undefined>(undefined)
 
-const BASE_SEPOLIA_CHAIN_ID = 84532
-
 export function Web3Provider({ children }: { children: React.ReactNode }) {
-  const [isConnected, setIsConnected] = useState(false)
-  const [address, setAddress] = useState<string | null>(null)
-  const [chainId, setChainId] = useState<number | null>(null)
-  const [isConnecting, setIsConnecting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  // Use the useWallet hook for full smart contract functionality
+  const wallet = useWallet()
 
-  useEffect(() => {
-    const checkWalletConnection = async () => {
-      if (typeof window !== "undefined" && window.ethereum) {
-        try {
-          const accounts = await window.ethereum.request({
-            method: "eth_accounts",
-          })
-          if (accounts && accounts.length > 0) {
-            setAddress(accounts[0])
-            setIsConnected(true)
-
-            // Get current chain ID
-            const chainIdHex = await window.ethereum.request({
-              method: "eth_chainId",
-            })
-            setChainId(Number.parseInt(chainIdHex, 16))
-          }
-        } catch (err) {
-          console.error("Failed to check wallet connection:", err)
-        }
-      }
-    }
-
-    checkWalletConnection()
-  }, [])
-
-  const connectWallet = useCallback(async () => {
-    setIsConnecting(true)
-    setError(null)
-    try {
-      if (typeof window !== "undefined" && window.ethereum) {
-        // Request account access
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        })
-
-        if (accounts && accounts.length > 0) {
-          setAddress(accounts[0])
-          setIsConnected(true)
-
-          // Switch to Base Sepolia if not already on it
-          try {
-            const chainIdHex = await window.ethereum.request({
-              method: "eth_chainId",
-            })
-            const currentChainId = Number.parseInt(chainIdHex, 16)
-            setChainId(currentChainId)
-
-            if (currentChainId !== BASE_SEPOLIA_CHAIN_ID) {
-              try {
-                await window.ethereum.request({
-                  method: "wallet_switchEthereumChain",
-                  params: [{ chainId: `0x${BASE_SEPOLIA_CHAIN_ID.toString(16)}` }],
-                })
-              } catch (switchError: any) {
-                // Chain doesn't exist, add it
-                if (switchError.code === 4902) {
-                  await window.ethereum.request({
-                    method: "wallet_addEthereumChain",
-                    params: [
-                      {
-                        chainId: `0x${BASE_SEPOLIA_CHAIN_ID.toString(16)}`,
-                        chainName: "Base Sepolia",
-                        rpcUrls: ["https://sepolia.base.org"],
-                        nativeCurrency: {
-                          name: "Ethereum",
-                          symbol: "ETH",
-                          decimals: 18,
-                        },
-                        blockExplorerUrls: ["https://sepolia.basescan.org"],
-                      },
-                    ],
-                  })
-                }
-              }
-            }
-          } catch (chainError) {
-            console.error("Failed to switch chain:", chainError)
-          }
-        }
-      } else {
-        setError("MetaMask or Web3 wallet not detected. Please install MetaMask.")
-      }
-    } catch (err: any) {
-      console.error("Failed to connect wallet:", err)
-      setError(err.message || "Failed to connect wallet")
-      setIsConnected(false)
-      setAddress(null)
-    } finally {
-      setIsConnecting(false)
-    }
-  }, [])
-
-  const disconnectWallet = useCallback(() => {
-    setAddress(null)
-    setIsConnected(false)
-    setChainId(null)
-    setError(null)
-  }, [])
+  const contextValue: Web3ContextType = {
+    ...wallet,
+    connectWallet: wallet.connect,
+    disconnectWallet: wallet.disconnect,
+    connect: wallet.connect,
+    disconnect: wallet.disconnect,
+    address: wallet.account, // Map account to address for compatibility
+    account: wallet.account, // Keep both for compatibility
+  }
 
   return (
-    <Web3Context.Provider
-      value={{ isConnected, address, chainId, connectWallet, disconnectWallet, isConnecting, error }}
-    >
+    <Web3Context.Provider value={contextValue}>
       {children}
     </Web3Context.Provider>
   )

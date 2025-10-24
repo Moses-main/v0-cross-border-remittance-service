@@ -60,7 +60,8 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-4 lg:gap-6">
           {DIRECT_LINKS.map((item) => {
             const isActive =
-              pathname === item.href || pathname.startsWith(item.href + "/");
+              pathname === item.href ||
+              (pathname && pathname.startsWith(item.href + "/"));
             return (
               <Link
                 key={item.href}

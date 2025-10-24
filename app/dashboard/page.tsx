@@ -9,7 +9,6 @@ import { useWeb3 } from "@/components/web3-provider"
 import { WalletConnectionGuard } from "@/components/wallet-connection-guard"
 import { useEffect, useState } from "react"
 import { motion, type Variants } from "framer-motion"
-import { DUMMY_USER_STATS } from "@/lib/dummy-data"
 import { useI18n } from "@/components/language-provider"
 
 export default function DashboardPage() {
@@ -33,11 +32,23 @@ export default function DashboardPage() {
       const response = await fetch(`/api/user/stats?address=${userAddress}`)
       if (response.ok) {
         const data = await response.json()
-        setStats(data && Object.keys(data).length > 0 ? data : DUMMY_USER_STATS)
+        if (data && Object.keys(data).length > 0) {
+          setStats({
+            totalSent: data.totalSent || "0.00",
+            cashbackBalance: data.cashbackBalance || "0.00",
+            referralRewards: data.referralRewards || "0.00",
+            transactionCount: data.transactionCount || 0,
+          })
+        }
       }
     } catch (error) {
       console.error("Failed to fetch user stats:", error)
-      setStats(DUMMY_USER_STATS)
+      setStats({
+        totalSent: "0.00",
+        cashbackBalance: "0.00",
+        referralRewards: "0.00",
+        transactionCount: 0,
+      })
     }
   }
 
