@@ -74,7 +74,7 @@ export function RecipientsBook() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>{t("saved_recipients_title")}</CardTitle>
+                <CardTitle>{t("saved_recipients_book_title")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid sm:grid-cols-3 gap-4">
@@ -96,16 +96,16 @@ export function RecipientsBook() {
           <div className="flex gap-2">
             {editingId ? (
               <Button onClick={() => updateRecipient(editingId)} disabled={!isValid}>
-                <Save className="mr-2 h-4 w-4" /> {t("save_changes")}
+                <Save className="mr-2 h-4 w-4" /> {t("save_recipients_changes")}
               </Button>
             ) : (
               <Button onClick={addRecipient} disabled={!isValid}>
-                <Plus className="mr-2 h-4 w-4" /> {t("add_recipient_btn")}
+                <Plus className="mr-2 h-4 w-4" /> {t("add_recipient_button")}
               </Button>
             )}
             {editingId && (
               <Button variant="outline" onClick={() => (setEditingId(null), setDraft({ name: "", address: "" }))}>
-                {t("cancel_edit")}
+                {t("cancel_edit_recipients")}
               </Button>
             )}
           </div>

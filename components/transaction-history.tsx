@@ -5,7 +5,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { Loader2 } from "lucide-react"
 import { motion } from "framer-motion"
-import { DUMMY_TRANSACTIONS } from "@/lib/dummy-data"
 
 interface Transaction {
   id: string
@@ -38,11 +37,15 @@ export function TransactionHistory({ userAddress }: TransactionHistoryProps) {
       const response = await fetch(`/api/transfers/history?address=${userAddress}`)
       if (response.ok) {
         const data = await response.json()
-        setTransactions(data.transactions && data.transactions.length > 0 ? data.transactions : DUMMY_TRANSACTIONS)
+        if (data.transactions && data.transactions.length > 0) {
+          setTransactions(data.transactions)
+        } else {
+          setTransactions([])
+        }
       }
     } catch (error) {
       console.error("Failed to fetch transactions:", error)
-      setTransactions(DUMMY_TRANSACTIONS)
+      setTransactions([])
     } finally {
       setIsLoading(false)
     }

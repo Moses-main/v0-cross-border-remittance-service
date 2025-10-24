@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { DUMMY_COUNTRIES, DUMMY_TOKENS } from "@/lib/dummy-data"
+import { SUPPORTED_COUNTRIES, SUPPORTED_TOKENS } from "@/lib/constants"
 import { getCachedResponse, setCachedResponse } from "@/lib/performance-utils"
 
 export async function GET() {
@@ -11,8 +11,8 @@ export async function GET() {
     }
 
     const data = {
-      countries: DUMMY_COUNTRIES,
-      tokens: DUMMY_TOKENS,
+      countries: SUPPORTED_COUNTRIES,
+      tokens: SUPPORTED_TOKENS,
     }
 
     setCachedResponse(cacheKey, data)

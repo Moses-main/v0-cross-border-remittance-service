@@ -1,5 +1,4 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { DUMMY_BATCH_TRANSFERS } from "@/lib/dummy-data"
 import { getCachedResponse, setCachedResponse } from "@/lib/performance-utils"
 
 export async function GET(request: NextRequest) {
@@ -16,7 +15,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ batches: cached }, { status: 200 })
     }
 
-    const batches = DUMMY_BATCH_TRANSFERS
+    // TODO: Implement batch transfers functionality in smart contract
+    // For now, return empty array as batch transfers are not implemented yet
+    const batches: any[] = []
 
     setCachedResponse(cacheKey, batches)
 
