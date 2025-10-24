@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { DUMMY_TRANSACTIONS } from "@/lib/dummy-data"
-import { getCachedResponse, setCachedResponse } from "@/lib/performance-utils"
+import { getCachedResponse } from "@/lib/performance-utils"
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,10 +15,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ transactions: cached }, { status: 200 })
     }
 
-    const transactions = DUMMY_TRANSACTIONS.filter((tx) => tx.from.toLowerCase() === address.toLowerCase())
-
-    setCachedResponse(cacheKey, transactions)
-
+    // Return empty array as we're not using dummy data anymore
+    const transactions: any[] = []
     return NextResponse.json({ transactions }, { status: 200 })
   } catch (error) {
     console.error("History fetch error:", error)

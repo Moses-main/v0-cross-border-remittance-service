@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
-import { DUMMY_COUNTRIES, DUMMY_TOKENS } from "@/lib/dummy-data"
-import { getCachedResponse, setCachedResponse } from "@/lib/performance-utils"
+import { getCachedResponse } from "@/lib/performance-utils"
 
 export async function GET() {
   try {
@@ -10,12 +9,11 @@ export async function GET() {
       return NextResponse.json(cached, { status: 200 })
     }
 
+    // Return empty arrays as we're not using dummy data anymore
     const data = {
-      countries: DUMMY_COUNTRIES,
-      tokens: DUMMY_TOKENS,
+      countries: [],
+      tokens: [],
     }
-
-    setCachedResponse(cacheKey, data)
 
     return NextResponse.json(data, { status: 200 })
   } catch (error) {

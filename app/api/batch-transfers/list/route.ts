@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { DUMMY_BATCH_TRANSFERS } from "@/lib/dummy-data"
-import { getCachedResponse, setCachedResponse } from "@/lib/performance-utils"
+import { getCachedResponse } from "@/lib/performance-utils"
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,10 +15,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ batches: cached }, { status: 200 })
     }
 
-    const batches = DUMMY_BATCH_TRANSFERS
-
-    setCachedResponse(cacheKey, batches)
-
+    // Return empty array as we're not using dummy data anymore
+    const batches: any[] = []
     return NextResponse.json({ batches }, { status: 200 })
   } catch (error) {
     console.error("Batch list fetch error:", error)

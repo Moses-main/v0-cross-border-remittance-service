@@ -38,11 +38,12 @@ export function TransactionHistory({ userAddress }: TransactionHistoryProps) {
       const response = await fetch(`/api/transfers/history?address=${userAddress}`)
       if (response.ok) {
         const data = await response.json()
-        setTransactions(data.transactions && data.transactions.length > 0 ? data.transactions : DUMMY_TRANSACTIONS)
+        if (data.transactions) {
+          setTransactions(data.transactions)
+        }
       }
     } catch (error) {
       console.error("Failed to fetch transactions:", error)
-      setTransactions(DUMMY_TRANSACTIONS)
     } finally {
       setIsLoading(false)
     }

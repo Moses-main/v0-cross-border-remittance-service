@@ -33,11 +33,12 @@ export default function DashboardPage() {
       const response = await fetch(`/api/user/stats?address=${userAddress}`)
       if (response.ok) {
         const data = await response.json()
-        setStats(data && Object.keys(data).length > 0 ? data : DUMMY_USER_STATS)
+        if (data && Object.keys(data).length > 0) {
+          setStats(data)
+        }
       }
     } catch (error) {
       console.error("Failed to fetch user stats:", error)
-      setStats(DUMMY_USER_STATS)
     }
   }
 

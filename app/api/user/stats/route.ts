@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { DUMMY_USER_STATS } from "@/lib/dummy-data"
-import { getCachedResponse, setCachedResponse } from "@/lib/performance-utils"
+import { getCachedResponse } from "@/lib/performance-utils"
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,9 +15,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(cached, { status: 200 })
     }
 
-    const stats = DUMMY_USER_STATS
-
-    setCachedResponse(cacheKey, stats)
+    // Return default values as we're not using dummy data anymore
+    const stats = {
+      totalSent: "0.00",
+      totalReceived: "0.00",
+      cashbackBalance: "0.00",
+      referralRewards: "0.00",
+      transactionCount: 0,
+      referralCount: 0,
+      tier: "Basic",
+      nextTierThreshold: "10000.00"
+    }
 
     return NextResponse.json(stats, { status: 200 })
   } catch (error) {
