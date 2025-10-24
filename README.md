@@ -1,6 +1,29 @@
 # BetaRemit - Cross-Border Remittance Service
 
-A modern, fast, and secure cross-border remittance platform built on blockchain technology using USDC and USDT stablecoins on Base Sepolia testnet.
+A modern, fast, and secure cross-border remittance platform built on blockchain technology using USDC and USDT stablecoins on Base Sepolia testnet. BetaRemit revolutionizes traditional money transfers by leveraging the power of blockchain to provide instant, low-cost, and transparent international money transfers.
+
+## Smart Contract
+
+**Deployed Contract Address (Base Sepolia):**  
+`0x3a5b97549f62c5218b8Ac01F239ff8e86F69edE4`
+
+## Key Benefits
+
+- **Lightning Fast Transfers**: Complete cross-border transactions in minutes, not days
+- **Ultra-Low Fees**: Save up to 80% compared to traditional remittance services
+- **Full Transparency**: Every transaction is recorded on the blockchain
+- **Bank-Grade Security**: Powered by smart contracts on Base Sepolia
+- **No Hidden Fees**: Know exactly what you're paying upfront
+- **24/7 Availability**: Send and receive money anytime, anywhere
+
+## How It Works
+
+1. **Connect Your Wallet**: Securely link your Web3 wallet (like MetaMask)
+2. **Select Recipient**: Choose from 10+ supported countries
+3. **Choose Amount**: Enter the amount to send in your preferred currency
+4. **Select Token**: Send using USDC or USDT stablecoins
+5. **Confirm & Send**: Review the transaction details and confirm
+6. **Recipient Receives Funds**: Funds are available almost instantly
 
 ## Features
 
@@ -34,6 +57,7 @@ A modern, fast, and secure cross-border remittance platform built on blockchain 
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Styling**: Tailwind CSS v4, Shadcn/UI
 - **Blockchain**: Solidity, Base Sepolia testnet
+- **Smart Contracts**: Deployed at `0x3a5b97549f62c5218b8Ac01F239ff8e86F69edE4`
 - **Web3**: ethers.js, wagmi
 - **Animations**: Framer Motion
 - **Performance**: Response caching, code splitting, lazy loading
@@ -50,8 +74,11 @@ A modern, fast, and secure cross-border remittance platform built on blockchain 
 
 1. Clone the repository:
    \`\`\`bash
-   git clone https://github.com/yourusername/BetaRemit.git
-   cd BetaRemit
+   <!-- git clone https://github.com/yourusername/BetaRemit.git -->
+
+   git clone https://github.com/Moses-main/v0-cross-border-remittance -service.git
+   \`\`\`
+   cd v0-cross-border-remittance-service
    \`\`\`
 
 2. Install dependencies:
@@ -65,24 +92,27 @@ A modern, fast, and secure cross-border remittance platform built on blockchain 
    \`\`\`
 
 4. Run the development server:
-   \`\`\`bash
+
+   ```bash
    npm run dev
-   \`\`\`
+   ```
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-### Smart Contract Deployment
+### Smart Contract Verification
 
-1. Deploy the RemittanceService contract to Base Sepolia:
-   \`\`\`bash
-   npx hardhat run scripts/deploy.ts --network baseSepolia
-   \`\`\`
+The RemittanceService smart contract is already deployed to Base Sepolia at `0x3a5b97549f62c5218b8Ac01F239ff8e86F69edE4`. You can interact with it directly using any Base Sepolia block explorer or Web3 tools.
 
-2. Update `REMITTANCE_CONTRACT_ADDRESS` in `lib/web3-config.ts`
+To verify the contract on a block explorer, use the following details:
+
+- Contract Address: `0x3a5b97549f62c5218b8Ac01F239ff8e86F69edE4`
+- Network: Base Sepolia Testnet
+- Compiler: Solidity 0.8.20+
+- Optimization: Enabled (200 runs)
 
 ## Project Structure
 
-\`\`\`
+```bash
 BetaRemit/
 ├── app/
 │ ├── api/ # API routes
@@ -253,3 +283,4 @@ For support, email support@BetaRemit.com or open an issue on GitHub.
 - UI components from [Shadcn/UI](https://ui.shadcn.com/)
 - Animations with [Framer Motion](https://www.framer.com/motion/)
 - Blockchain on [Base](https://base.org/)
+```
