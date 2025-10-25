@@ -58,7 +58,7 @@ interface Web3State {
   isLoading: boolean
   error: string | null
   provider: ethers.BrowserProvider | null
-  signer: ethers.JsonRpcSigner | null
+  signer: ethers.utils.JsonRpcSigner | null
   contract: ethers.Contract | null
   usdcContract: ethers.Contract | null
   balance: string
