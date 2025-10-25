@@ -1,20 +1,25 @@
 "use client"
 
 import { useI18n, type LanguageCode } from "./language-provider"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export function LanguageSelector() {
   const { lang, setLang } = useI18n()
+  
   return (
-    <select
-      aria-label="Language"
-      className="bg-transparent border border-border rounded-md text-sm px-2 py-1"
-      value={lang}
-      onChange={(e) => setLang(e.target.value as LanguageCode)}
+    <Select 
+      value={lang} 
+      onValueChange={(value: LanguageCode) => setLang(value)}
     >
-      <option value="en">EN</option>
-      <option value="fr">FR</option>
-      <option value="es">ES</option>
-      <option value="de">DE</option>
-    </select>
+      <SelectTrigger className="w-[80px] h-9">
+        <SelectValue placeholder="Select language" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="en">EN</SelectItem>
+        <SelectItem value="fr">FR</SelectItem>
+        <SelectItem value="es">ES</SelectItem>
+        <SelectItem value="de">DE</SelectItem>
+      </SelectContent>
+    </Select>
   )
 }

@@ -1,5 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getCachedResponse } from "@/lib/performance-utils"
+import { getCachedResponse, setCachedResponse } from "@/lib/performance-utils"
+import { getUserTransactions } from "@/utils/paymentService"
+import { baseSepolia } from "viem/chains"
+import { createPublicClient, http } from "viem"
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,8 +18,32 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ transactions: cached }, { status: 200 })
     }
 
-    // Return empty array as we're not using dummy data anymore
-    const transactions: any[] = []
+    // Create a public client for blockchain interaction
+    const client = createPublicClient({
+      chain: baseSepolia,
+      transport: http(),
+    })
+
+    // Get transactions from the smart contract
+    const blockchainTransactions = await getUserTransactions(client as any, address as `0x${string}`, 0, 50)
+
+    // Format transactions for frontend compatibility
+    const transactions = blockchainTransactions.map(tx => ({
+      id: tx.id.toString(),
+      from: tx.from,
+      to: tx.to,
+      amount: tx.amount.toString(),
+      token: "USDC", // TODO: Get actual token from contract
+      country: "", // TODO: Get country from contract if available
+      status: tx.status,
+      timestamp: new Date(Number(tx.timestamp) * 1000),
+      fee: "0", // TODO: Calculate fee
+      cashback: "0", // TODO: Get cashback from contract
+      exchangeRate: 1, // TODO: Get actual exchange rate
+    }))
+
+    setCachedResponse(cacheKey, transactions)
+
     return NextResponse.json({ transactions }, { status: 200 })
   } catch (error) {
     console.error("History fetch error:", error)

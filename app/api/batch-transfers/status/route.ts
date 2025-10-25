@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getCachedResponse } from "@/lib/performance-utils"
+import { getCachedResponse, setCachedResponse } from "@/lib/performance-utils"
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,8 +15,28 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(cached, { status: 200 })
     }
 
-    // Return not found as we're not using dummy data anymore
-    return NextResponse.json({ error: "Batch not found" }, { status: 404 })
+    // TODO: Implement batch transfers functionality in smart contract
+    // For now, return not found as batch transfers are not implemented yet
+    return NextResponse.json({
+      error: "Batch transfers not implemented yet",
+      status: "not_implemented"
+    }, { status: 404 })
+
+    // Future implementation would look like this:
+    // const batchStatus = {
+    //   batchId,
+    //   status: batch.status,
+    //   totalTransactions: batch.totalTransfers,
+    //   completed: batch.completedCount,
+    //   failed: batch.failedCount,
+    //   processing: batch.totalTransfers - batch.completedCount - batch.failedCount,
+    //   createdAt: batch.uploadDate.toISOString(),
+    //   totalAmount: batch.totalAmount,
+    //   token: batch.token,
+    // }
+
+    // setCachedResponse(cacheKey, batchStatus)
+    // return NextResponse.json(batchStatus, { status: 200 })
   } catch (error) {
     console.error("Batch status fetch error:", error)
     return NextResponse.json({ error: "Failed to fetch batch status" }, { status: 500 })

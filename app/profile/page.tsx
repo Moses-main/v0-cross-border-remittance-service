@@ -86,7 +86,7 @@ export default function ProfilePage() {
                 className="w-full transition-all duration-300 hover:scale-105 active:scale-95 bg-transparent"
               >
                 <Copy className="mr-2 h-4 w-4" />
-                {copied ? t("copied") : t("copy_address")}
+                {copied ? t("copied_address") : t("copy_address")}
               </Button>
             </CardContent>
           </Card>

@@ -11,24 +11,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { AlertCircle, CheckCircle2, Loader2, UserPlus } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useI18n } from "./language-provider"
-
-const COUNTRIES = [
-  { code: "PH", name: "Philippines", currency: "PHP" },
-  { code: "IN", name: "India", currency: "INR" },
-  { code: "MX", name: "Mexico", currency: "MXN" },
-  { code: "NG", name: "Nigeria", currency: "NGN" },
-  { code: "KE", name: "Kenya", currency: "KES" },
-  { code: "BD", name: "Bangladesh", currency: "BDT" },
-  { code: "PK", name: "Pakistan", currency: "PKR" },
-  { code: "VN", name: "Vietnam", currency: "VND" },
-  { code: "TH", name: "Thailand", currency: "THB" },
-  { code: "ID", name: "Indonesia", currency: "IDR" },
-]
-
-const PAYMENT_CURRENCIES = [
-  { code: "USDC", name: "USD Coin (USDC)", symbol: "USDC" },
-  { code: "USDT", name: "Tether (USDT)", symbol: "USDT" },
-]
+import { SUPPORTED_COUNTRIES, SUPPORTED_TOKENS, TOKEN_ADDRESSES } from "@/lib/constants"
+import { useWeb3 } from "./web3-provider"
 
 interface TransferFormProps {
   userAddress: string
@@ -43,6 +27,7 @@ interface TransferFormProps {
 
 export function TransferForm({ userAddress, initialData }: TransferFormProps) {
   const { t } = useI18n()
+  const { initiateTransfer, isConnected, loading, clearError } = useWeb3()
   const [formData, setFormData] = useState({
     recipientAddress: "",
     amount: "",
@@ -89,45 +74,55 @@ export function TransferForm({ userAddress, initialData }: TransferFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!isConnected) {
+      setStatus("error")
+      setMessage("Please connect your wallet first")
+      return
+    }
+
     setIsLoading(true)
     setStatus("idle")
 
     try {
-      const response = await fetch("/api/transfers/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          senderAddress: userAddress,
-        }),
+      // Get the token address for the selected payment currency
+      const tokenInfo = SUPPORTED_TOKENS.find(t => t.symbol === formData.paymentCurrency)
+      if (!tokenInfo) {
+        throw new Error("Invalid payment currency")
+      }
+
+      // Convert amount to proper units (assuming USDC/USDT with 6 decimals)
+      const amountInUnits = BigInt(Math.floor(Number.parseFloat(formData.amount) * 10 ** tokenInfo.decimals))
+
+      // Call the smart contract directly through Web3 context
+      const result = await initiateTransfer({
+        recipient: formData.recipientAddress as `0x${string}`,
+        amount: amountInUnits,
+        recipientCountry: formData.country,
+        token: tokenInfo.address as `0x${string}`,
+        value: 0n
       })
 
-      const data = await response.json()
+      setStatus("success")
+      setMessage("Transfer initiated successfully! Transaction hash: " + (typeof result.txHash === 'string' ? result.txHash : result.txHash))
+      setFormData({ recipientAddress: "", amount: "", country: "", paymentCurrency: "USDC", description: "" })
 
-      if (response.ok) {
-        setStatus("success")
-        setMessage("Transfer initiated successfully! Transaction hash: " + data.txHash)
-        setFormData({ recipientAddress: "", amount: "", country: "", paymentCurrency: "USDC", description: "" })
-        // Prompt to save recipient if not already saved
-        const exists = savedRecipients.some((r) => r.address.toLowerCase() === (formData.recipientAddress || "").toLowerCase())
-        setShowSavePrompt(!exists && !!formData.recipientAddress)
-      } else {
-        setStatus("error")
-        setMessage(data.error || "Failed to create transfer")
-      }
+      // Prompt to save recipient if not already saved
+      const exists = savedRecipients.some((r) => r.address.toLowerCase() === (formData.recipientAddress || "").toLowerCase())
+      setShowSavePrompt(!exists && !!formData.recipientAddress)
     } catch (error) {
       setStatus("error")
-      setMessage("An error occurred. Please try again.")
+      setMessage(error instanceof Error ? error.message : "An error occurred. Please try again.")
       console.error("Transfer error:", error)
     } finally {
       setIsLoading(false)
     }
   }
 
-  const selectedCountry = COUNTRIES.find((c) => c.code === formData.country)
+  const selectedCountry = SUPPORTED_COUNTRIES.find((c) => c.code === formData.country)
   const amount = Number.parseFloat(formData.amount) || 0
-  const fee = amount * 0.005
-  const cashback = amount * 0.01
+  const fee = amount * 0.005 // 0.5% fee
+  const cashback = amount >= 1000 ? amount * 0.01 : 0 // 1% cashback for transactions >= $1000
   const total = amount + fee
 
   return (
@@ -141,11 +136,13 @@ export function TransferForm({ userAddress, initialData }: TransferFormProps) {
               <SelectValue placeholder={t("select_saved_recipient")} />
             </SelectTrigger>
             <SelectContent>
-              {savedRecipients.map((r) => (
-                <SelectItem key={r.id} value={r.address}>
-                  {r.name} — {r.address.slice(0, 6)}...{r.address.slice(-4)}
-                </SelectItem>
-              ))}
+              {savedRecipients
+                .filter((r) => r.address && r.address.trim() !== "")
+                .map((r) => (
+                  <SelectItem key={r.id} value={r.address}>
+                    {r.name} — {r.address.slice(0, 6)}...{r.address.slice(-4)}
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
         </div>
@@ -187,9 +184,9 @@ export function TransferForm({ userAddress, initialData }: TransferFormProps) {
               <SelectValue placeholder={t("label_payment_currency")} />
             </SelectTrigger>
             <SelectContent>
-              {PAYMENT_CURRENCIES.map((currency) => (
-                <SelectItem key={currency.code} value={currency.code}>
-                  {currency.name}
+              {SUPPORTED_TOKENS.map((token) => (
+                <SelectItem key={token.symbol} value={token.symbol}>
+                  {token.name} ({token.symbol})
                 </SelectItem>
               ))}
             </SelectContent>
@@ -205,7 +202,7 @@ export function TransferForm({ userAddress, initialData }: TransferFormProps) {
               <SelectValue placeholder={t("label_destination_country")} />
             </SelectTrigger>
             <SelectContent>
-              {COUNTRIES.map((country) => (
+              {SUPPORTED_COUNTRIES.map((country) => (
                 <SelectItem key={country.code} value={country.code}>
                   {country.name} ({country.currency})
                 </SelectItem>
