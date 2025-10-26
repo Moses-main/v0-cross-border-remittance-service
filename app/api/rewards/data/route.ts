@@ -62,8 +62,6 @@ export async function GET(request: NextRequest) {
       referrals: [], // TODO: Get actual referrals from contract if available
     }
 
-    setCachedResponse(cacheKey, rewardsData)
-
     return NextResponse.json(rewardsData, { status: 200 })
   } catch (error) {
     console.error("Rewards data fetch error:", error)

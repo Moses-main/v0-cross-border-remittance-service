@@ -193,7 +193,7 @@ export const useWallet = (): UseWalletReturn => {
     async (provider: any, account: string) => {
       try {
         // Create a signer
-        const web3Provider = new ethers.BrowserProvider(provider);
+        const web3Provider = new ethers.providers.Web3Provider(window.ethereum);    
         const signer = await web3Provider.getSigner(account);
 
         // Create contract instance

@@ -19,11 +19,13 @@ import { useWallet } from "./useWallet"
 
 // Helper functions for formatting
 const formatEther = (wei: ethers.BigNumberish) => {
-  return ethers.formatEther(wei)
+  return ethers.utils.formatEther(wei)
 }
 
+// and use:
+
 const formatUnits = (value: ethers.BigNumberish, decimals: number = 6) => {
-  return ethers.formatUnits(value, decimals)
+  return ethers.utils.formatUnits(value, decimals)
 }
 
 // ERC20 ABI - Imported from web3-config
@@ -56,7 +58,7 @@ interface Web3State {
   isLoading: boolean
   error: string | null
   provider: ethers.BrowserProvider | null
-  signer: ethers.JsonRpcSigner | null
+  signer: ethers.utils.JsonRpcSigner | null
   contract: ethers.Contract | null
   usdcContract: ethers.Contract | null
   balance: string
