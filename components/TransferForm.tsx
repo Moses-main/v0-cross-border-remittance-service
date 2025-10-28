@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useWalletState } from "@/providers/wallet-state-provider";
-import { SUPPORTED_TOKENS, SUPPORTED_COUNTRIES } from "@/lib/constants";
+import { SUPPORTED_TOKENS, SUPPORTED_COUNTRIES, NETWORK_CONFIG } from "@/lib/constants";
 import { initiateRemittance } from "@/services/remittanceService";
 import type { Address } from "viem";
 import { createPublicClient, http, parseAbi, parseUnits, formatUnits } from "viem";
@@ -158,8 +158,24 @@ export function TransferForm() {
         owner: address as Address,
       });
 
+      const tx = typeof result.txHash === "string" ? result.txHash : String(result.txHash);
+      const explorerBase = NETWORK_CONFIG.blockExplorerUrl?.replace(/\/$/, "") || "https://sepolia.basescan.org";
+      const href = `${explorerBase}/tx/${tx}`;
+      // Notify other components (e.g., history) to refresh
+      try {
+        window.dispatchEvent(new CustomEvent("remit:tx-submitted", { detail: { txHash: tx } }));
+      } catch {}
       toast.success("Transfer submitted", {
-        description: `Tx Hash: ${typeof result.txHash === "string" ? result.txHash : String(result.txHash)}`,
+        description: (
+          <span>
+            Tx Hash: <a href={href} target="_blank" rel="noopener noreferrer" className="text-primary underline">{tx.slice(0, 10)}...</a>
+          </span>
+        ),
+        action: {
+          label: "View on BaseScan",
+          onClick: () => window.open(href, "_blank", "noopener,noreferrer"),
+        },
+        position: "top-center",
       });
 
       // Reset form

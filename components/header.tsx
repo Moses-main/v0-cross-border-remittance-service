@@ -65,7 +65,6 @@ export function Header() {
     address,
     token: TOKEN_ADDRESSES.USDC as `0x${string}`,
     chainId: baseSepolia.id,
-    watch: true,
   });
   const { t } = useI18n();
   const { disconnect } = useDisconnect();
@@ -220,12 +219,16 @@ export function Header() {
                       </p>
                       <p className="font-semibold text-blue-700">
                         {usdcBalance?.formatted
-                          ? `${parseFloat(usdcBalance.formatted).toFixed(2)} USDC`
+                          ? `${parseFloat(usdcBalance.formatted).toFixed(
+                              2
+                            )} USDC`
                           : "0.00 USDC"}
                       </p>
                     </div>
                     <div className="p-3 rounded border bg-muted/50">
-                      <p className="text-xs text-muted-foreground">ETH Balance</p>
+                      <p className="text-xs text-muted-foreground">
+                        ETH Balance
+                      </p>
                       <p className="font-semibold">
                         {ethBalance
                           ? `${parseFloat(ethBalance).toFixed(4)} ETH`
