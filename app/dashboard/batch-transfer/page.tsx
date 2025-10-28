@@ -1,144 +1,145 @@
-"use client"
+"use client";
 
-import { DashboardLayout } from "@/components/dashboard-layout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Download, AlertCircle, CheckCircle2, Loader2 } from "lucide-react"
-import { useWeb3 } from "@/components/web3-provider"
-import { useState } from "react"
-import { BatchUploadForm } from "@/components/batch-upload-form"
+import { DashboardLayout } from "@/components/dashboard-layout";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Download, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { BatchUploadForm } from "@/components/batch-upload-form";
 
 interface BatchTransaction {
-  id: string
-  recipientAddress: string
-  amount: string
-  country: string
-  description: string
-  status: "pending" | "processing" | "completed" | "failed"
-  error?: string
+  id: string;
+  recipientAddress: string;
+  amount: string;
+  country: string;
+  description: string;
+  status: "pending" | "processing" | "completed" | "failed";
+  error?: string;
 }
 
 export default function BatchTransferPage() {
-  const { isConnected, address } = useWeb3()
-  const [transactions, setTransactions] = useState<BatchTransaction[]>([])
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [uploadStatus, setUploadStatus] = useState<"idle" | "success" | "error">("idle")
-  const [uploadMessage, setUploadMessage] = useState("")
+  const [transactions, setTransactions] = useState<BatchTransaction[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const [uploadMessage, setUploadMessage] = useState("");
 
   const handleFileUpload = async (file: File) => {
-    setIsProcessing(true)
-    setUploadStatus("idle")
+    setIsProcessing(true);
+    setUploadStatus("idle");
 
     try {
-      const text = await file.text()
-      const lines = text.split("\n").filter((line) => line.trim())
+      const text = await file.text();
+      const lines = text.split("\n").filter((line) => line.trim());
 
       // Parse CSV
-      const headers = lines[0].split(",").map((h) => h.trim().toLowerCase())
-      const recipientIndex = headers.indexOf("recipient")
-      const amountIndex = headers.indexOf("amount")
-      const countryIndex = headers.indexOf("country")
-      const descriptionIndex = headers.indexOf("description")
+      const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
+      const recipientIndex = headers.indexOf("recipient");
+      const amountIndex = headers.indexOf("amount");
+      const countryIndex = headers.indexOf("country");
+      const descriptionIndex = headers.indexOf("description");
 
       if (recipientIndex === -1 || amountIndex === -1 || countryIndex === -1) {
-        setUploadStatus("error")
-        setUploadMessage("CSV must contain: recipient, amount, country columns")
-        setIsProcessing(false)
-        return
+        setUploadStatus("error");
+        setUploadMessage(
+          "CSV must contain: recipient, amount, country columns"
+        );
+        setIsProcessing(false);
+        return;
       }
 
       // Parse transactions
-      const parsedTransactions: BatchTransaction[] = lines.slice(1).map((line, index) => {
-        const values = line.split(",").map((v) => v.trim())
-        return {
-          id: `batch-${Date.now()}-${index}`,
-          recipientAddress: values[recipientIndex],
-          amount: values[amountIndex],
-          country: values[countryIndex],
-          description: descriptionIndex !== -1 ? values[descriptionIndex] : "",
-          status: "pending",
-        }
-      })
+      const parsedTransactions: BatchTransaction[] = lines
+        .slice(1)
+        .map((line, index) => {
+          const values = line.split(",").map((v) => v.trim());
+          return {
+            id: `batch-${Date.now()}-${index}`,
+            recipientAddress: values[recipientIndex],
+            amount: values[amountIndex],
+            country: values[countryIndex],
+            description:
+              descriptionIndex !== -1 ? values[descriptionIndex] : "",
+            status: "pending",
+          };
+        });
 
-      setTransactions(parsedTransactions)
-      setUploadStatus("success")
-      setUploadMessage(`Successfully loaded ${parsedTransactions.length} transactions`)
+      setTransactions(parsedTransactions);
+      setUploadStatus("success");
+      setUploadMessage(
+        `Successfully loaded ${parsedTransactions.length} transactions`
+      );
     } catch (error) {
-      setUploadStatus("error")
-      setUploadMessage("Failed to parse CSV file")
-      console.error("CSV parsing error:", error)
+      setUploadStatus("error");
+      setUploadMessage("Failed to parse CSV file");
+      console.error("CSV parsing error:", error);
     } finally {
-      setIsProcessing(false)
+      setIsProcessing(false);
     }
-  }
+  };
 
   const handleProcessBatch = async () => {
-    if (!address) return
-
-    setIsProcessing(true)
+    // Simulate processing locally without blockchain/back-end
+    setIsProcessing(true);
     try {
-      const response = await fetch("/api/batch-transfers/process", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          senderAddress: address,
-          transactions,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setUploadStatus("success")
-        setUploadMessage(`Batch processing started. ${data.processedCount} transactions queued.`)
-        // Update transaction statuses
+      setUploadStatus("success");
+      setUploadMessage(
+        `Batch processing started. ${transactions.length} transactions queued.`
+      );
+      setTransactions((prev) =>
+        prev.map((tx) => ({
+          ...tx,
+          status: "processing",
+        }))
+      );
+      // Optionally simulate completion after delay
+      setTimeout(() => {
         setTransactions((prev) =>
           prev.map((tx) => ({
             ...tx,
-            status: "processing",
-          })),
-        )
-      } else {
-        setUploadStatus("error")
-        setUploadMessage(data.error || "Failed to process batch")
-      }
+            status: "completed",
+          }))
+        );
+      }, 1500);
     } catch (error) {
-      setUploadStatus("error")
-      setUploadMessage("An error occurred while processing batch")
-      console.error("Batch processing error:", error)
+      setUploadStatus("error");
+      setUploadMessage("An error occurred while processing batch");
+      console.error("Batch processing error:", error);
     } finally {
-      setIsProcessing(false)
+      setIsProcessing(false);
     }
-  }
+  };
 
   const downloadTemplate = () => {
-    const template = "recipient,amount,country,description\n0x...,100,PH,Payment for services\n"
-    const blob = new Blob([template], { type: "text/csv" })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = "batch-transfer-template.csv"
-    a.click()
-  }
+    const template =
+      "recipient,amount,country,description\n0x...,100,PH,Payment for services\n";
+    const blob = new Blob([template], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "batch-transfer-template.csv";
+    a.click();
+  };
 
-  if (!isConnected) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center min-h-screen">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>Connect Your Wallet</CardTitle>
-              <CardDescription>Please connect your wallet to use batch transfers</CardDescription>
-            </CardHeader>
-          </Card>
-        </div>
-      </DashboardLayout>
-    )
-  }
+  // Render UI regardless of wallet connection
 
   const stats = {
     total: transactions.length,
@@ -146,16 +147,23 @@ export default function BatchTransferPage() {
     processing: transactions.filter((t) => t.status === "processing").length,
     completed: transactions.filter((t) => t.status === "completed").length,
     failed: transactions.filter((t) => t.status === "failed").length,
-    totalAmount: transactions.reduce((sum, t) => sum + (Number.parseFloat(t.amount) || 0), 0),
-  }
+    totalAmount: transactions.reduce(
+      (sum, t) => sum + (Number.parseFloat(t.amount) || 0),
+      0
+    ),
+  };
 
   return (
     <DashboardLayout>
       <div className="space-y-8">
         {/* Header */}
         <div className="animate-fade-in">
-          <h1 className="text-3xl font-bold text-foreground">Batch Transfers</h1>
-          <p className="text-muted-foreground mt-2">Upload and process multiple remittances at once</p>
+          <h1 className="text-3xl font-bold text-foreground">
+            Batch Transfers
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Upload and process multiple remittances at once
+          </p>
         </div>
 
         {/* Stats */}
@@ -178,7 +186,9 @@ export default function BatchTransferPage() {
                 <CardTitle className="text-sm font-medium">Pending</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
+                <p className="text-2xl font-bold text-yellow-600">
+                  {stats.pending}
+                </p>
               </CardContent>
             </Card>
 
@@ -187,10 +197,14 @@ export default function BatchTransferPage() {
               style={{ animationDelay: "100ms" }}
             >
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Processing</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Processing
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-blue-600">{stats.processing}</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {stats.processing}
+                </p>
               </CardContent>
             </Card>
 
@@ -202,7 +216,9 @@ export default function BatchTransferPage() {
                 <CardTitle className="text-sm font-medium">Completed</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {stats.completed}
+                </p>
               </CardContent>
             </Card>
 
@@ -211,17 +227,25 @@ export default function BatchTransferPage() {
               style={{ animationDelay: "200ms" }}
             >
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Total Amount</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Total Amount
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold">${stats.totalAmount.toFixed(2)}</p>
+                <p className="text-2xl font-bold">
+                  ${stats.totalAmount.toFixed(2)}
+                </p>
               </CardContent>
             </Card>
           </div>
         )}
 
         {/* Tabs */}
-        <Tabs defaultValue="upload" className="w-full animate-slide-up" style={{ animationDelay: "100ms" }}>
+        <Tabs
+          defaultValue="upload"
+          className="w-full animate-slide-up"
+          style={{ animationDelay: "100ms" }}
+        >
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="upload">Upload CSV</TabsTrigger>
             <TabsTrigger value="preview">Preview</TabsTrigger>
@@ -233,22 +257,31 @@ export default function BatchTransferPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Upload Batch File</CardTitle>
-                <CardDescription>Upload a CSV file with recipient details</CardDescription>
+                <CardDescription>
+                  Upload a CSV file with recipient details
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <BatchUploadForm onFileUpload={handleFileUpload} isLoading={isProcessing} />
+                <BatchUploadForm
+                  onFileUpload={handleFileUpload}
+                  isLoading={isProcessing}
+                />
 
                 {uploadStatus === "success" && (
                   <Alert className="border-green-500/50 bg-green-500/10 animate-slide-down">
                     <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    <AlertDescription className="text-green-600">{uploadMessage}</AlertDescription>
+                    <AlertDescription className="text-green-600">
+                      {uploadMessage}
+                    </AlertDescription>
                   </Alert>
                 )}
 
                 {uploadStatus === "error" && (
                   <Alert className="border-destructive/50 bg-destructive/10 animate-slide-down">
                     <AlertCircle className="h-4 w-4 text-destructive" />
-                    <AlertDescription className="text-destructive">{uploadMessage}</AlertDescription>
+                    <AlertDescription className="text-destructive">
+                      {uploadMessage}
+                    </AlertDescription>
                   </Alert>
                 )}
 
@@ -271,8 +304,8 @@ export default function BatchTransferPage() {
                     <Button
                       variant="outline"
                       onClick={() => {
-                        setTransactions([])
-                        setUploadStatus("idle")
+                        setTransactions([]);
+                        setUploadStatus("idle");
                       }}
                       className="transition-all duration-300 hover:scale-105 active:scale-95"
                     >
@@ -289,7 +322,9 @@ export default function BatchTransferPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Transaction Preview</CardTitle>
-                <CardDescription>Review transactions before processing</CardDescription>
+                <CardDescription>
+                  Review transactions before processing
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {transactions.length === 0 ? (
@@ -315,10 +350,14 @@ export default function BatchTransferPage() {
                             className="animate-slide-up"
                             style={{ animationDelay: `${index * 50}ms` }}
                           >
-                            <TableCell className="font-mono text-xs">{tx.recipientAddress.slice(0, 10)}...</TableCell>
+                            <TableCell className="font-mono text-xs">
+                              {tx.recipientAddress.slice(0, 10)}...
+                            </TableCell>
                             <TableCell>${tx.amount}</TableCell>
                             <TableCell>{tx.country}</TableCell>
-                            <TableCell className="text-sm text-muted-foreground">{tx.description || "-"}</TableCell>
+                            <TableCell className="text-sm text-muted-foreground">
+                              {tx.description || "-"}
+                            </TableCell>
                             <TableCell>
                               <Badge
                                 variant="outline"
@@ -326,10 +365,10 @@ export default function BatchTransferPage() {
                                   tx.status === "pending"
                                     ? "bg-yellow-500/10 text-yellow-700 border-yellow-500/20"
                                     : tx.status === "processing"
-                                      ? "bg-blue-500/10 text-blue-700 border-blue-500/20"
-                                      : tx.status === "completed"
-                                        ? "bg-green-500/10 text-green-700 border-green-500/20"
-                                        : "bg-red-500/10 text-red-700 border-red-500/20"
+                                    ? "bg-blue-500/10 text-blue-700 border-blue-500/20"
+                                    : tx.status === "completed"
+                                    ? "bg-green-500/10 text-green-700 border-green-500/20"
+                                    : "bg-red-500/10 text-red-700 border-red-500/20"
                                 }
                               >
                                 {tx.status}
@@ -350,7 +389,9 @@ export default function BatchTransferPage() {
             <Card>
               <CardHeader>
                 <CardTitle>CSV Template</CardTitle>
-                <CardDescription>Download a template to get started</CardDescription>
+                <CardDescription>
+                  Download a template to get started
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="bg-muted p-4 rounded-lg font-mono text-sm overflow-x-auto">
@@ -370,7 +411,8 @@ export default function BatchTransferPage() {
                       <strong>amount</strong> - Transfer amount in USDC
                     </li>
                     <li>
-                      <strong>country</strong> - Destination country code (PH, IN, MX, etc.)
+                      <strong>country</strong> - Destination country code (PH,
+                      IN, MX, etc.)
                     </li>
                     <li>
                       <strong>description</strong> - Optional note for recipient
@@ -391,5 +433,5 @@ export default function BatchTransferPage() {
         </Tabs>
       </div>
     </DashboardLayout>
-  )
+  );
 }

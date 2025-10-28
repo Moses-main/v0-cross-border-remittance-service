@@ -1,12 +1,63 @@
-import { ERC20_ABI } from "./web3-config";
+// import { ERC20_ABI } from "./web3-config";
+import { base } from "@base-org/account";
+import type { Address } from "viem";
 
 // Re-export ERC20_ABI for convenience
-export { ERC20_ABI };
+// export { ERC20_ABI };
+
+// ERC20 ABI for USDC transfers
+export const ERC20_ABI = [
+  {
+    name: "transfer",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "to", type: "address" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    name: "balanceOf",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "account", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+] as const;
+
+// Utility functions
+export function formatAddress(address: string): string {
+  if (!address) return "";
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+}
+
+export function formatCurrency(
+  amount: string | number,
+  currency: string = "USDC"
+): string {
+  const num = typeof amount === "string" ? parseFloat(amount) : amount;
+  return `${num.toFixed(2)} ${currency}`;
+}
+
+export function chainIdToHex(chainId: number): string {
+  return `0x${chainId.toString(16)}`;
+}
+
+// Base Sepolia Configuration
+export const BASE_SEPOLIA_CHAIN_ID = base.constants.CHAIN_IDS.baseSepolia; // 84532
+export const BASE_MAINNET_CHAIN_ID = base.constants.CHAIN_IDS.base; // 8453
+
+// USDC Contract on Base Sepolia
+export const USDC_CONTRACT_ADDRESS: Address =
+  "0x3a5b97549f62c5218b8Ac01F239ff8e86F69edE4";
 
 // Base Sepolia token addresses
 export const TOKEN_ADDRESSES = {
-  USDC: "0x036CbD53842c5426634e7929541eC2318f3dCF7e", // USDC on Base Sepolia
+  USDC: "0x036CbD53842c5426634e7929541eC2318f3dCF7e", // USDC on Base Sepolia (testnet address)
   USDT: "0xfad636016e34182822db5c4a4e9b887aa4b8c8b8", // USDT on Base Sepolia
+  // Canonical WETH on Base (also applicable on Base Sepolia testnet)
+  ETH: "0x4200000000000000000000000000000000000006",
 } as const;
 
 export const SUPPORTED_TOKENS = [

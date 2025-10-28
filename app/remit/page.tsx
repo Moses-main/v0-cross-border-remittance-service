@@ -3,7 +3,7 @@
 import { TransferForm } from '@/components/TransferForm';
 import { Toaster } from 'sonner';
 
-export default function TransferPage() {
+export default function RemitPage() {
   return (
     <div className="container mx-auto py-10 px-4">
       <div className="max-w-2xl mx-auto">
