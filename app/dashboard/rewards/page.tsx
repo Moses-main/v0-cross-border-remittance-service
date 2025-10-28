@@ -1,17 +1,22 @@
-"use client"
+"use client";
 
-import { DashboardLayout } from "@/components/dashboard-layout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Gift, Users, TrendingUp, Copy, Check } from "lucide-react"
-import { useWeb3 } from "@/components/web3-provider"
-import { useState, useEffect } from "react"
+import { DashboardLayout } from "@/components/dashboard-layout";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Gift, Users, TrendingUp, Copy, Check } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function RewardsPage() {
-  const { isConnected, address, userInfo, loading, withdrawCashback } = useWeb3()
+  // Disconnected from wallet/web3; use local placeholder state
   const [rewardsData, setRewardsData] = useState({
     cashbackBalance: "0.00",
     referralRewards: "0.00",
@@ -19,49 +24,25 @@ export default function RewardsPage() {
     referralCode: "",
     referralCount: 0,
     tier: "Bronze",
-  })
-  const [copied, setCopied] = useState(false)
+  });
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (isConnected && address && userInfo) {
-      // Update rewards data from Web3 context
-      const cashbackFloat = parseFloat(userInfo.cashbackEarned.toString()) / 1e6 // Convert from wei to USDC
-      const referralFloat = parseFloat(userInfo.referralRewards.toString()) / 1e6 // Convert from wei to USDC
-      const totalEarned = (cashbackFloat + referralFloat).toFixed(2)
-      const tier = userInfo.referralCount >= 5 ? "Gold" : userInfo.referralCount >= 2 ? "Silver" : "Bronze"
-
-      setRewardsData({
-        cashbackBalance: cashbackFloat.toFixed(2),
-        referralRewards: referralFloat.toFixed(2),
-        totalEarned,
-        referralCode: `REF-${address.slice(2, 8).toUpperCase()}`,
-        referralCount: userInfo.referralCount,
-        tier,
-      })
-    }
-  }, [isConnected, address, userInfo])
+    // Initialize with demo referral code and placeholder values
+    const demoCode = `REF-USER123`;
+    setRewardsData((prev) => ({
+      ...prev,
+      referralCode: demoCode,
+    }));
+  }, []);
 
   const handleCopyReferralCode = () => {
-    navigator.clipboard.writeText(rewardsData.referralCode)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    navigator.clipboard.writeText(rewardsData.referralCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
-  if (!isConnected) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center min-h-screen">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>Connect Your Wallet</CardTitle>
-              <CardDescription>Please connect your wallet to view your rewards</CardDescription>
-            </CardHeader>
-          </Card>
-        </div>
-      </DashboardLayout>
-    )
-  }
-
+  // Render UI regardless of wallet connection
   return (
     <DashboardLayout>
       <div className="space-y-8">
@@ -69,33 +50,49 @@ export default function RewardsPage() {
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Cashback Balance</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Cashback Balance
+              </CardTitle>
               <Gift className="h-4 w-4 text-accent" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">${rewardsData.cashbackBalance}</div>
-              <p className="text-xs text-muted-foreground mt-1">Available to withdraw</p>
+              <div className="text-3xl font-bold">
+                ${rewardsData.cashbackBalance}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Available to withdraw
+              </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Referral Rewards</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Referral Rewards
+              </CardTitle>
               <Users className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">${rewardsData.referralRewards}</div>
-              <p className="text-xs text-muted-foreground mt-1">From {rewardsData.referralCount} referrals</p>
+              <div className="text-3xl font-bold">
+                ${rewardsData.referralRewards}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                From {rewardsData.referralCount} referrals
+              </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Earned</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Earned
+              </CardTitle>
               <TrendingUp className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">${rewardsData.totalEarned}</div>
+              <div className="text-3xl font-bold">
+                ${rewardsData.totalEarned}
+              </div>
               <Badge className="mt-2">{rewardsData.tier}</Badge>
             </CardContent>
           </Card>
@@ -114,7 +111,9 @@ export default function RewardsPage() {
             <Card>
               <CardHeader>
                 <CardTitle>How Cashback Works</CardTitle>
-                <CardDescription>Earn rewards on every transaction</CardDescription>
+                <CardDescription>
+                  Earn rewards on every transaction
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
@@ -124,7 +123,9 @@ export default function RewardsPage() {
                     </div>
                     <div>
                       <p className="font-medium">Send a Remittance</p>
-                      <p className="text-sm text-muted-foreground">Transfer funds to any recipient worldwide</p>
+                      <p className="text-sm text-muted-foreground">
+                        Transfer funds to any recipient worldwide
+                      </p>
                     </div>
                   </div>
 
@@ -134,7 +135,9 @@ export default function RewardsPage() {
                     </div>
                     <div>
                       <p className="font-medium">Earn Cashback</p>
-                      <p className="text-sm text-muted-foreground">Get 1% cashback on transactions over $1,000</p>
+                      <p className="text-sm text-muted-foreground">
+                        Get 1% cashback on transactions over $1,000
+                      </p>
                     </div>
                   </div>
 
@@ -144,20 +147,26 @@ export default function RewardsPage() {
                     </div>
                     <div>
                       <p className="font-medium">Withdraw Anytime</p>
-                      <p className="text-sm text-muted-foreground">Withdraw your cashback balance to your wallet</p>
+                      <p className="text-sm text-muted-foreground">
+                        Withdraw your cashback balance to your wallet
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="border-t border-border pt-4 mt-4">
-                  <h4 className="font-medium mb-3">Cashback Rates by Transaction Size</h4>
+                  <h4 className="font-medium mb-3">
+                    Cashback Rates by Transaction Size
+                  </h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">$10 - $999</span>
                       <span className="font-medium">0.5%</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">$1,000 - $9,999</span>
+                      <span className="text-muted-foreground">
+                        $1,000 - $9,999
+                      </span>
                       <span className="font-medium">1%</span>
                     </div>
                     <div className="flex justify-between text-sm">
@@ -177,7 +186,9 @@ export default function RewardsPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Referral Program</CardTitle>
-                <CardDescription>Earn rewards by inviting friends</CardDescription>
+                <CardDescription>
+                  Earn rewards by inviting friends
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
@@ -187,7 +198,9 @@ export default function RewardsPage() {
                     </div>
                     <div>
                       <p className="font-medium">Share Your Code</p>
-                      <p className="text-sm text-muted-foreground">Copy and share your unique referral code</p>
+                      <p className="text-sm text-muted-foreground">
+                        Copy and share your unique referral code
+                      </p>
                     </div>
                   </div>
 
@@ -197,7 +210,9 @@ export default function RewardsPage() {
                     </div>
                     <div>
                       <p className="font-medium">Friends Sign Up</p>
-                      <p className="text-sm text-muted-foreground">Your friends use your code to create an account</p>
+                      <p className="text-sm text-muted-foreground">
+                        Your friends use your code to create an account
+                      </p>
                     </div>
                   </div>
 
@@ -207,7 +222,9 @@ export default function RewardsPage() {
                     </div>
                     <div>
                       <p className="font-medium">Earn Rewards</p>
-                      <p className="text-sm text-muted-foreground">Get 0.5% on every transaction they make</p>
+                      <p className="text-sm text-muted-foreground">
+                        Get 0.5% on every transaction they make
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -215,14 +232,22 @@ export default function RewardsPage() {
                 <div className="border-t border-border pt-4 mt-4">
                   <h4 className="font-medium mb-3">Your Referral Code</h4>
                   <div className="flex gap-2">
-                    <Input value={rewardsData.referralCode} readOnly className="font-mono text-sm" />
+                    <Input
+                      value={rewardsData.referralCode}
+                      readOnly
+                      className="font-mono text-sm"
+                    />
                     <Button
                       variant="outline"
                       size="icon"
                       onClick={handleCopyReferralCode}
                       className="shrink-0 bg-transparent"
                     >
-                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copied ? (
+                        <Check className="h-4 w-4" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
                     </Button>
                   </div>
                 </div>
@@ -237,7 +262,9 @@ export default function RewardsPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Tier Benefits</CardTitle>
-                <CardDescription>Unlock higher rewards as you increase your transaction volume</CardDescription>
+                <CardDescription>
+                  Unlock higher rewards as you increase your transaction volume
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -246,7 +273,9 @@ export default function RewardsPage() {
                       <h4 className="font-medium">Bronze Tier</h4>
                       <Badge variant="secondary">Current</Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">$0 - $10,000 total volume</p>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      $0 - $10,000 total volume
+                    </p>
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-center gap-2">
                         <span className="text-primary">✓</span>
@@ -268,7 +297,9 @@ export default function RewardsPage() {
                       <h4 className="font-medium">Silver Tier</h4>
                       <Badge variant="outline">$10,000+</Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">$10,000 - $50,000 total volume</p>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      $10,000 - $50,000 total volume
+                    </p>
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-center gap-2">
                         <span className="text-primary">✓</span>
@@ -290,7 +321,9 @@ export default function RewardsPage() {
                       <h4 className="font-medium">Gold Tier</h4>
                       <Badge variant="outline">$50,000+</Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">$50,000+ total volume</p>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      $50,000+ total volume
+                    </p>
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-center gap-2">
                         <span className="text-primary">✓</span>
@@ -326,5 +359,5 @@ export default function RewardsPage() {
         </Card>
       </div>
     </DashboardLayout>
-  )
+  );
 }

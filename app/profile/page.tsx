@@ -1,6 +1,5 @@
 "use client";
 
-import { useWeb3 } from "@/components/web3-provider";
 import { WalletConnectionGuard } from "@/components/wallet-connection-guard";
 import {
   Card,
@@ -18,7 +17,8 @@ import { PaymentLinkBuilder } from "@/components/payment-link-builder";
 import { useI18n } from "@/components/language-provider";
 
 export default function ProfilePage() {
-  const { isConnected, address } = useWeb3();
+  // Disconnected from web3; use placeholder address
+  const address = "0x1234...ABCD";
   const { t } = useI18n();
   const [qrCode, setQrCode] = useState<string>("");
   const [copied, setCopied] = useState(false);

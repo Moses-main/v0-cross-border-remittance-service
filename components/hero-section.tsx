@@ -77,14 +77,14 @@ export function HeroSection() {
               <div className="absolute bottom-10 left-10 h-28 sm:h-40 w-28 sm:w-40 rounded-full bg-accent/20 blur-3xl" />
             </div>
             <div className="relative z-10 text-center space-y-4 px-4">
-                <Image
-                  src="/betaRemit.png"
-                  alt="RemitFlow Beta Logo"
-                  width={200} // adjust as needed
-                  height={200} // adjust as needed
-                  priority
-                  className="mx-auto rounded-lg"
-                />
+              <Image
+                src="/betaRemit.png"
+                alt="RemitFlow Beta Logo"
+                width={200} // adjust as needed
+                height={200} // adjust as needed
+                priority
+                className="mx-auto rounded-lg"
+              />
               <p className="text-sm sm:text-base text-muted-foreground">
                 {t("hero_network_label")}
               </p>
