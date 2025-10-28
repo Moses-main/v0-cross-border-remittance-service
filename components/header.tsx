@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { baseSepolia } from "viem/chains";
 import { toast } from "sonner";
-import { useBalance } from "wagmi";
+import { useBalance, useDisconnect } from "wagmi";
 import { useWalletState } from "@/providers/wallet-state-provider";
 
 const PRIMARY_NAV = [
@@ -68,6 +68,7 @@ export function Header() {
     watch: true,
   });
   const { t } = useI18n();
+  const { disconnect } = useDisconnect();
 
   const handleConnect = async () => {
     setIsConnecting(true);
@@ -85,9 +86,9 @@ export function Header() {
 
   const handleDisconnect = async () => {
     try {
-      // try disconnecting wallet here
-      // await walletService.disconnect();
+      await disconnect();
       toast.success("Wallet disconnected");
+      setShowWalletMenu(false);
     } catch (error) {
       console.error("Error disconnecting wallet:", error);
       toast.error("Failed to disconnect wallet");
