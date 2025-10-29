@@ -17,6 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle, CheckCircle2, Loader2, UserPlus } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useI18n } from "./language-provider";
+import { useToast } from "@/components/ui/use-toast";
 import {
   SUPPORTED_COUNTRIES,
   SUPPORTED_TOKENS,
@@ -36,7 +37,8 @@ interface TransferFormProps {
 
 export function TransferForm({ userAddress, initialData }: TransferFormProps) {
   const { t } = useI18n();
-  // Disconnected from web3: no wallet state is required
+  const { toast } = useToast();
+  
   const [formData, setFormData] = useState({
     recipientAddress: "",
     amount: "",
@@ -91,32 +93,57 @@ export function TransferForm({ userAddress, initialData }: TransferFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!userAddress) {
+      setStatus("error");
+      setMessage("Please connect your wallet first");
+      return;
+    }
+
+    if (!formData.recipientAddress || !formData.amount) {
+      setStatus("error");
+      setMessage("Please fill in all required fields");
+      return;
+    }
+
     setIsLoading(true);
     setStatus("idle");
 
     try {
-      // Simulate a successful submission without blockchain
-      await new Promise((r) => setTimeout(r, 1000));
-      setStatus("success");
-      setMessage(
-        `Transfer submitted (simulation). Recipient: ${formData.recipientAddress}, Amount: ${formData.amount} ${formData.paymentCurrency}`
+      const { remittanceService } = await import('@/services/remittance-service');
+      
+      // Convert amount to proper decimal places (USDC has 6 decimals)
+      const amountInWei = BigInt(Math.floor(parseFloat(formData.amount) * 1e6));
+      
+      // Execute the transfer
+      const result = await remittanceService.executeGroupPayment(
+        userAddress as `0x${string}`,
+        [{
+          address: formData.recipientAddress as `0x${string}`,
+          amount: amountInWei.toString()
+        }]
       );
-      setFormData({
+      
+      toast({
+        title: "Success",
+        description: `Successfully sent ${formData.amount} ${formData.paymentCurrency} to ${formData.recipientAddress.slice(0, 6)}...${formData.recipientAddress.slice(-4)}`,
+      });
+      
+      // Reset form on success
+      setFormData(prev => ({
         recipientAddress: "",
         amount: "",
-        paymentCurrency: "USDC",
+        paymentCurrency: prev.paymentCurrency,
         description: "",
-      });
-
-      // Prompt to save recipient if not already saved
-      const exists = savedRecipients.some(
-        (r) =>
-          r.address.toLowerCase() ===
-          (formData.recipientAddress || "").toLowerCase()
+      }));
+      
+      // Show save prompt if recipient is not saved
+      const isSaved = savedRecipients.some(
+        (r) => r.address.toLowerCase() === formData.recipientAddress.toLowerCase()
       );
-      setShowSavePrompt(!exists && !!formData.recipientAddress);
-    } catch (error) {
-      setStatus("error");
+      if (!isSaved) {
+        setShowSavePrompt(true);
+      }
+    } catch (error: any) {
       setMessage(
         error instanceof Error
           ? error.message
