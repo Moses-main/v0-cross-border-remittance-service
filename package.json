@@ -7,7 +7,7 @@
     "dev": "next dev",
     "lint": "eslint .",
     "start": "next start",
-    "optimize:images": "ts-node scripts/optimize-images.ts",
+    "optimize:images": "node scripts/optimize-images.js",
     "postinstall": "npm run optimize:images",
     "prebuild": "npm run optimize:images"
   },
