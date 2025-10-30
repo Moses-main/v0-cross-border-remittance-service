@@ -3,9 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Globe } from "lucide-react";
 import { useI18n } from "./language-provider";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 export function HeroSection() {
   const { t } = useI18n();
+  const router = useRouter();
   return (
     <section className="relative overflow-hidden py-16 md:py-32">
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
@@ -22,6 +24,7 @@ export function HeroSection() {
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Button
+                onClick={() => router.push("/dashboard")}
                 size="lg"
                 className="gap-2 transition-all duration-300 hover:scale-105 active:scale-95 w-full sm:w-auto"
               >

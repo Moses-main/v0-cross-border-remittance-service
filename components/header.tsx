@@ -42,7 +42,7 @@ import { useWalletState } from "@/providers/wallet-state-provider";
 
 const PRIMARY_NAV = [
   { href: "/dashboard", key: "transfer", icon: Send },
-  { href: "/request", key: "request", icon: WalletIcon },
+  { href: "/receive", key: "receive", icon: WalletIcon },
   { href: "/dashboard/rewards", key: "rewards", icon: Gift },
 ];
 
@@ -58,7 +58,9 @@ export function Header() {
   const [isConnecting, setIsConnecting] = useState(false);
   const { address, isConnected, chain } = useWalletState();
   const [walletState, setWalletState] = useState();
-  const [showWalletMenu, setShowWalletMenu] = useState(false);
+  // Dedicated state for the MOBILE wallet dropdown only
+  const [mobileWalletOpen, setMobileWalletOpen] = useState(false);
+  const [showWalletMenu, setShowWalletMenu    ] = useState(false);
   const pathname = usePathname();
   const { roundedBalance: ethBalance } = useGetETHBalance(address);
   const { data: usdcBalance, refetch: refetchBalance } = useBalance({
@@ -131,7 +133,7 @@ export function Header() {
                 }`}
               >
                 <Icon className="h-4 w-4" />
-                <span>{t(item.key)}</span>
+                <span>{t(item.key) || item.key.charAt(0).toUpperCase() + item.key.slice(1)}</span>
               </Link>
             );
           })}
@@ -176,7 +178,7 @@ export function Header() {
                   <ChevronDown className="h-4 w-4 opacity-50" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align="end" side="bottom" sideOffset={8} className="w-56">
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => address && copyToClipboard(address)}
@@ -259,15 +261,13 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <DropdownMenu
-              open={showWalletMenu}
-              onOpenChange={setShowWalletMenu}
-            >
+            // Desktop connect dropdown (uncontrolled). Trigger hidden on mobile via CSS.
+            <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="gap-2"
+                  className="gap-2 hidden sm:flex"
                   disabled={isConnecting}
                 >
                   {isConnecting ? (
@@ -283,25 +283,31 @@ export function Header() {
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="md">
+              <DropdownMenuContent align="end" side="bottom" sideOffset={8} className="md">
                 <Wallet />
               </DropdownMenuContent>
             </DropdownMenu>
           )}
 
-          {/* Mobile Menu Button */}
+          {/* Mobile controls with wallet icon dropdown (right-aligned) */}
           <div className="md:hidden flex items-center gap-2">
             <LanguageSelector />
             <ThemeToggle />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowWalletMenu(!showWalletMenu)}
-              className="relative"
-            >
-              <WalletIcon className="h-5 w-5" />
-              <span className="sr-only">Wallet</span>
-            </Button>
+            <DropdownMenu open={mobileWalletOpen} onOpenChange={setMobileWalletOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative h-10 w-10"
+                >
+                  <WalletIcon className="h-6 w-6" />
+                  <span className="sr-only">Wallet</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" side="bottom" sideOffset={8} className="md">
+                <Wallet />
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>

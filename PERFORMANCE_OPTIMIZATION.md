@@ -18,7 +18,7 @@
 
 - `debounce()`: Prevents excessive function calls
 - `throttle()`: Limits event handler frequency
-- `lazyLoadImages()`: Load images on demand
+- lazyLoadImages()`: Load images on demand
 - `prefetchResource()`: Pre-load critical resources
 
 ---
